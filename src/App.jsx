@@ -8,7 +8,7 @@ import TransactionsScreen from "./screens/TransactionsScreen";
 import UsdtWalletScreen from "./screens/UsdtWalletScreen";
 import ProfileScreen from "./screens/ProfileScreen";
 import SupportScreen from "./screens/SupportScreen";
-import { getSession, refreshSession, clearSession } from "./data/users";
+import { refreshSession, clearSession } from "./data/users";
 
 function App() {
   const [screen, setScreen] = useState("splash");
@@ -16,7 +16,6 @@ function App() {
   const [theme, setTheme] = useState("dark");
   const [user, setUser] = useState(null);
 
-  // Load theme
   useEffect(() => {
     const savedTheme = localStorage.getItem("aermeans-theme");
     if (savedTheme) setTheme(savedTheme);
@@ -32,7 +31,6 @@ function App() {
     localStorage.setItem("aermeans-theme", theme);
   }, [theme]);
 
-  // Check session after splash
   const handleSplashFinish = () => {
     const session = refreshSession();
     if (session) {
@@ -77,7 +75,6 @@ function App() {
 
   const showBottomNav = ["home", "transactions", "usdt", "support", "profile"].includes(screen);
 
-  // Refresh user data when navigating
   useEffect(() => {
     if (user) {
       const fresh = refreshSession();
@@ -86,9 +83,8 @@ function App() {
   }, [screen]);
 
   return (
-    <div className="h-screen w-full bg-desktop flex items-center justify-center p-4">
-      {/* Phone frame on desktop, full width on mobile */}
-      <div className="w-full max-w-md h-full md:h-[90vh] md:rounded-[2.5rem] md:border-[8px] md:border-navy-800 md:shadow-2xl md:shadow-black/50 overflow-hidden relative bg-navy-900">
+    <div className="min-h-screen w-full bg-navy-900">
+      <div className="w-full max-w-6xl mx-auto min-h-screen relative">
         {screen === "splash" && <SplashScreen onFinish={handleSplashFinish} />}
         {screen === "auth" && <AuthScreen onAuthSuccess={handleAuthSuccess} />}
         {screen === "pin" && <PinLoginScreen onLogin={handlePinSuccess} />}

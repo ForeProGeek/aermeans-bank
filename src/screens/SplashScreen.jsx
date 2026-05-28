@@ -2,14 +2,12 @@ import { useEffect } from "react";
 
 export default function SplashScreen({ onFinish }) {
   useEffect(() => {
-    const timer = setTimeout(() => {
-      onFinish();
-    }, 2500);
+    const timer = setTimeout(() => onFinish(), 2500);
     return () => clearTimeout(timer);
   }, [onFinish]);
 
   return (
-    <div className="h-full w-full bg-[#003d99] flex flex-col items-center justify-between relative overflow-hidden">
+    <div className="min-h-screen w-full bg-[#003d99] flex flex-col items-center justify-between relative overflow-hidden">
       {/* Decorative wave at top */}
       <div className="absolute top-0 left-0 w-full h-32 opacity-20">
         <svg viewBox="0 0 1440 320" className="w-full h-full" preserveAspectRatio="none">
@@ -18,25 +16,25 @@ export default function SplashScreen({ onFinish }) {
       </div>
 
       {/* Main content */}
-      <div className="flex-1 flex flex-col items-center justify-center px-8 z-10 mt-12">
-        <h1 className="text-4xl md:text-5xl font-bold text-white text-center leading-tight mb-8">
+      <div className="flex-1 flex flex-col items-center justify-center px-8 z-10 mt-12 md:mt-20">
+        <h1 className="text-4xl md:text-6xl font-bold text-white text-center leading-tight mb-8">
           Experience<br />
           <span className="inline-flex items-center gap-2">
-            <span className="text-2xl">→</span> Seamless
+            <span className="text-2xl md:text-4xl">→</span> Seamless
           </span><br />
           Transactions
         </h1>
 
-        <div className="bg-gold px-8 py-3 rounded-xl mb-12">
-          <span className="text-navy-900 font-bold text-xl tracking-wide">aermeans</span>
+        <div className="bg-gold px-8 md:px-12 py-3 md:py-4 rounded-xl mb-12 md:mb-16">
+          <span className="text-navy-900 font-bold text-xl md:text-2xl tracking-wide">aermeans</span>
         </div>
 
-        {/* Woman illustration placeholder */}
-        <div className="relative w-64 h-80 flex items-end justify-center">
-          <div className="absolute bottom-0 w-56 h-72 bg-gradient-to-t from-gold/20 to-transparent rounded-t-full"></div>
+        {/* Avatar placeholder */}
+        <div className="relative w-64 h-80 md:w-80 md:h-96 flex items-end justify-center">
+          <div className="absolute bottom-0 w-56 md:w-72 h-72 md:h-80 bg-gradient-to-t from-gold/20 to-transparent rounded-t-full"></div>
           <div className="relative z-10 text-center">
-            <div className="w-48 h-56 bg-gold/30 rounded-t-full mx-auto flex items-center justify-center">
-              <span className="text-gold text-6xl">👩</span>
+            <div className="w-48 md:w-64 h-56 md:h-72 bg-gold/30 rounded-t-full mx-auto flex items-center justify-center">
+              <span className="text-gold text-6xl md:text-8xl">👩</span>
             </div>
           </div>
         </div>
