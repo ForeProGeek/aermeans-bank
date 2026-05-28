@@ -30,8 +30,14 @@ const socialIcons = [
   FaTelegram, FaAmazon, FaPaypal, FaYoutube,
 ];
 
-export default function HomeScreen({ onNavigate }) {
+export default function HomeScreen({ user, onNavigate }) {
   const [showBalance, setShowBalance] = useState(false);
+
+  const displayName = user?.fullName || "Joshua Agboola";
+  const firstName = displayName.split(" ")[0];
+  const balance = user?.balance ?? 0.61;
+  const accountNumber = user?.accountNumber || "1228788473";
+  const bankName = user?.bankName || "Nombank(Amucha) MFB";
 
   return (
     <div className="min-h-full pb-24">
@@ -44,7 +50,7 @@ export default function HomeScreen({ onNavigate }) {
           <FaBars className="text-gold" size={18} />
         </button>
         <div className="flex items-center gap-2">
-          <span className="font-family-script text-lg text-white">Hi, Joshua</span>
+          <span className="font-family-script text-lg text-white">Hi, {firstName}</span>
           <span className="text-lg">👋</span>
         </div>
         <button className="w-10 h-10 bg-gold-dark rounded-full flex items-center justify-center relative">
@@ -55,7 +61,6 @@ export default function HomeScreen({ onNavigate }) {
 
       {/* Wallet Balance Card */}
       <div className="mx-4 mb-3 rounded-2xl overflow-hidden relative bg-gradient-to-r from-blue-600 to-blue-800 p-5">
-        {/* Decorative wave */}
         <div className="absolute top-0 right-0 w-40 h-40 bg-pink-500/30 rounded-full -translate-y-1/2 translate-x-1/4"></div>
         <div className="absolute bottom-0 right-10 w-24 h-24 bg-purple-500/20 rounded-full translate-y-1/2"></div>
         
@@ -63,7 +68,7 @@ export default function HomeScreen({ onNavigate }) {
           <p className="font-family-script text-white/80 text-sm mb-1">Wallet Balance</p>
           <div className="flex items-center gap-3">
             <span className="text-3xl font-bold text-white">
-              {showBalance ? "₦0.61" : "₦****"}
+              {showBalance ? `₦${balance.toFixed(2)}` : "₦****"}
             </span>
             <button onClick={() => setShowBalance(!showBalance)} className="text-white/80">
               {showBalance ? <FaEyeSlash size={18} /> : <FaEye size={18} />}
@@ -81,9 +86,9 @@ export default function HomeScreen({ onNavigate }) {
             <p className="font-family-script text-gold-light text-sm">Bank name</p>
           </div>
           <div className="text-right space-y-1">
-            <p className="text-white text-sm font-medium">1228788473</p>
-            <p className="font-family-script text-gold-light text-sm">Joshua Agboola</p>
-            <p className="font-family-script text-gold-light text-sm">Nombank(Amucha) MFB</p>
+            <p className="text-white text-sm font-medium">{accountNumber}</p>
+            <p className="font-family-script text-gold-light text-sm">{displayName}</p>
+            <p className="font-family-script text-gold-light text-sm">{bankName}</p>
           </div>
         </div>
       </div>

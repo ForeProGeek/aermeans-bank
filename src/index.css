@@ -25,12 +25,21 @@ html, body, #root {
   overflow-x: hidden;
 }
 
+/* Desktop background */
+.bg-desktop {
+  background: linear-gradient(135deg, #0a1628 0%, #1a2d4d 50%, #0f1f3d 100%);
+}
+
 /* Light mode overrides */
 html.light-mode,
 html.light-mode body,
 html.light-mode #root {
   background-color: #f0f4f8;
   color: #1a202c;
+}
+
+html.light-mode .bg-desktop {
+  background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e0 50%, #e2e8f0 100%);
 }
 
 html.light-mode .bg-navy-900 { background-color: #f0f4f8; }

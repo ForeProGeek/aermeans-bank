@@ -1,12 +1,15 @@
 import { useState } from "react";
 import { FaUser, FaHeadphones, FaFingerprint, FaBackspace } from "react-icons/fa";
-
-const CORRECT_PIN = "123456";
+import { refreshSession } from "../data/users";
 
 export default function PinLoginScreen({ onLogin }) {
   const [pin, setPin] = useState("");
   const [error, setError] = useState(false);
   const maxPinLength = 6;
+
+  const user = refreshSession();
+  const userName = user?.fullName?.split(" ")[0] || "Joshua";
+  const correctPin = user?.pin || "123456";
 
   const handleNumber = (num) => {
     if (pin.length < maxPinLength) {
@@ -16,7 +19,7 @@ export default function PinLoginScreen({ onLogin }) {
 
       if (newPin.length === maxPinLength) {
         setTimeout(() => {
-          if (newPin === CORRECT_PIN) {
+          if (newPin === correctPin) {
             onLogin();
           } else {
             setError(true);
@@ -52,7 +55,7 @@ export default function PinLoginScreen({ onLogin }) {
           <FaUser className="text-gold" size={36} />
         </div>
         <h2 className="font-family-script text-2xl text-white mb-1">
-          Welcome back, Joshua! 👋
+          Welcome back, {userName}! 👋
         </h2>
         <p className="font-family-script text-gray-400 text-sm">
           Enter your PIN to access your Aermeans account.
@@ -65,11 +68,7 @@ export default function PinLoginScreen({ onLogin }) {
           <div
             key={i}
             className={`w-4 h-4 rounded-full transition-all duration-200 ${
-              error
-                ? "bg-red-500"
-                : i < pin.length
-                ? "bg-gold"
-                : "bg-navy-500"
+              error ? "bg-red-500" : i < pin.length ? "bg-gold" : "bg-navy-500"
             }`}
           />
         ))}
@@ -87,7 +86,7 @@ export default function PinLoginScreen({ onLogin }) {
       {/* Actions */}
       <div className="flex items-center justify-between mb-6 px-2">
         <div className="text-sm">
-          <span className="text-gray-400 font-family-script">Not Joshua? </span>
+          <span className="text-gray-400 font-family-script">Not {userName}? </span>
           <button className="text-gold font-family-script font-semibold">Switch account</button>
         </div>
         <button className="text-gold font-family-script font-semibold text-sm">Forgot PIN?</button>
@@ -122,10 +121,6 @@ export default function PinLoginScreen({ onLogin }) {
           </button>
         </div>
       </div>
-
-      <p className="text-center text-gray-500 text-xs mt-4">
-        Default PIN: <span className="text-gold">123456</span>
-      </p>
     </div>
   );
 }

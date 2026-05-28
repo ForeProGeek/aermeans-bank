@@ -18,8 +18,12 @@ const menuItems = [
   { icon: FaShieldAlt, label: "Privacy and policy" },
 ];
 
-export default function ProfileScreen({ onBack, theme, onToggleTheme }) {
+export default function ProfileScreen({ user, onBack, onLogout, theme, onToggleTheme }) {
   const isLight = theme === "light";
+  const displayName = user?.fullName || "Joshua Agboola";
+  const username = user?.username || "geek";
+  const joinedDate = user?.joinedDate || "Nov 11, 2024";
+  const tier = user?.tier || "REGULAR";
 
   return (
     <div className="min-h-full pb-24">
@@ -30,13 +34,13 @@ export default function ProfileScreen({ onBack, theme, onToggleTheme }) {
             <FaUser className="text-navy-900" size={24} />
           </div>
           <div>
-            <h3 className="font-family-script text-white text-lg">Joshua Agboola</h3>
-            <p className="font-family-script text-gray-300 text-sm">Username : geek</p>
-            <p className="font-family-script text-gray-300 text-sm">Joined Nov 11, 2024</p>
+            <h3 className="font-family-script text-white text-lg">{displayName}</h3>
+            <p className="font-family-script text-gray-300 text-sm">Username : {username}</p>
+            <p className="font-family-script text-gray-300 text-sm">Joined {joinedDate}</p>
           </div>
         </div>
         <span className="px-4 py-1.5 bg-navy-900 rounded-lg font-family-script text-white text-sm">
-          REGULAR
+          {tier}
         </span>
       </div>
 
@@ -60,7 +64,10 @@ export default function ProfileScreen({ onBack, theme, onToggleTheme }) {
 
       {/* Bottom Actions */}
       <div className="flex items-center justify-around px-4 py-6 mt-4">
-        <button className="flex items-center gap-2 text-red-400 font-family-script">
+        <button
+          onClick={onLogout}
+          className="flex items-center gap-2 text-red-400 font-family-script hover:text-red-300 transition-colors"
+        >
           <FaSignOutAlt size={16} /> Sign out
         </button>
         <button
