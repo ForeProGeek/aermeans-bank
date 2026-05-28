@@ -25,7 +25,9 @@ html, body, #root {
   overflow-x: hidden;
 }
 
-/* Light mode overrides */
+/* ─────────────────────────────────────────
+   LIGHT MODE OVERRIDES
+   ───────────────────────────────────────── */
 html.light-mode,
 html.light-mode body,
 html.light-mode #root {
@@ -44,7 +46,9 @@ html.light-mode .text-white { color: #1a202c; }
 html.light-mode .text-gray-400 { color: #718096; }
 html.light-mode .text-gray-500 { color: #a0aec0; }
 
-/* Hide scrollbar */
+/* ─────────────────────────────────────────
+   SCROLLBAR
+   ───────────────────────────────────────── */
 .scrollbar-hide {
   -ms-overflow-style: none;
   scrollbar-width: none;
@@ -53,7 +57,9 @@ html.light-mode .text-gray-500 { color: #a0aec0; }
   display: none;
 }
 
-/* Shake animation for PIN error */
+/* ─────────────────────────────────────────
+   SHAKE ANIMATION (PIN error)
+   ───────────────────────────────────────── */
 @keyframes shake {
   0%, 100% { transform: translateX(0); }
   10%, 30%, 50%, 70%, 90% { transform: translateX(-6px); }
@@ -63,18 +69,16 @@ html.light-mode .text-gray-500 { color: #a0aec0; }
   animation: shake 0.4s ease-in-out;
 }
 
-/* Floating particles for landing page */
+/* ─────────────────────────────────────────
+   FLOATING PARTICLES
+   ───────────────────────────────────────── */
 @keyframes float {
   0%, 100% {
     transform: translateY(0) translateX(0);
     opacity: 0;
   }
-  10% {
-    opacity: 1;
-  }
-  90% {
-    opacity: 1;
-  }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
   100% {
     transform: translateY(-100vh) translateX(20px);
     opacity: 0;
@@ -84,7 +88,73 @@ html.light-mode .text-gray-500 { color: #a0aec0; }
   animation: float linear infinite;
 }
 
-/* Gradient text utility */
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.3; }
+  50% { transform: translateY(-20px) rotate(180deg); opacity: 0.8; }
+}
+.animate-float-slow {
+  animation: float-slow 8s ease-in-out infinite;
+}
+
+/* ─────────────────────────────────────────
+   GLOW PULSE
+   ───────────────────────────────────────── */
+@keyframes glow-pulse {
+  0%, 100% { box-shadow: 0 0 5px rgba(201, 162, 39, 0.3), 0 0 20px rgba(201, 162, 39, 0.1); }
+  50% { box-shadow: 0 0 15px rgba(201, 162, 39, 0.6), 0 0 40px rgba(201, 162, 39, 0.2); }
+}
+.animate-glow-pulse {
+  animation: glow-pulse 2s ease-in-out infinite;
+}
+
+/* ─────────────────────────────────────────
+   SHIMMER / LOADING SKELETON
+   ───────────────────────────────────────── */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.animate-shimmer {
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.08) 50%, transparent 100%);
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+
+/* ─────────────────────────────────────────
+   GRADIENT BORDER
+   ───────────────────────────────────────── */
+.gradient-border {
+  position: relative;
+  background: linear-gradient(135deg, #132242, #0f1f3d);
+  border-radius: 1rem;
+}
+.gradient-border::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 1rem;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(201,162,39,0.4), rgba(201,162,39,0.05), rgba(59,130,246,0.2));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* ─────────────────────────────────────────
+   GLASS CARD
+   ───────────────────────────────────────── */
+.glass-card {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* ─────────────────────────────────────────
+   TEXT GRADIENT GOLD
+   ───────────────────────────────────────── */
 .text-gradient-gold {
   background: linear-gradient(90deg, #c9a227, #f0d878, #c9a227);
   -webkit-background-clip: text;
@@ -92,9 +162,35 @@ html.light-mode .text-gray-500 { color: #a0aec0; }
   background-clip: text;
 }
 
-/* Glass card effect */
-.glass-card {
-  background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+/* ─────────────────────────────────────────
+   ROTATE SLOW
+   ───────────────────────────────────────── */
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+.animate-spin-slow {
+  animation: spin-slow 20s linear infinite;
+}
+
+/* ─────────────────────────────────────────
+   BOUNCE SOFT
+   ───────────────────────────────────────── */
+@keyframes bounce-soft {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+.animate-bounce-soft {
+  animation: bounce-soft 3s ease-in-out infinite;
+}
+
+/* ─────────────────────────────────────────
+   RIPPLE EFFECT
+   ───────────────────────────────────────── */
+@keyframes ripple {
+  0% { transform: scale(0.8); opacity: 1; }
+  100% { transform: scale(2.4); opacity: 0; }
+}
+.animate-ripple {
+  animation: ripple 1.5s ease-out infinite;
 }

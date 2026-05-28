@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { motion } from "framer-motion";
 import {
   FaBars, FaBell, FaEye, FaEyeSlash, FaUniversity,
   FaPaperPlane, FaGift, FaWifi, FaMobileAlt,
@@ -40,31 +41,55 @@ export default function HomeScreen({ user, onNavigate }) {
   const bankName = user?.bankName || "Nombank(Amucha) MFB";
 
   return (
-    <div className="min-h-screen pb-24 md:pb-28">
+    <div className="min-h-screen pb-24 md:pb-28 relative overflow-hidden">
+      {/* Background glow */}
+      <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-blue-600/10 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-[20%] left-0 w-[300px] h-[300px] bg-gold/10 rounded-full blur-[100px] pointer-events-none" />
+
       {/* Header */}
-      <div className="flex items-center justify-between px-4 md:px-8 lg:px-12 py-4 md:py-6">
-        <button onClick={() => onNavigate("profile")}
-          className="w-10 h-10 md:w-12 md:h-12 bg-gold-dark rounded-full flex items-center justify-center hover:bg-gold-darker transition-colors">
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="flex items-center justify-between px-4 md:px-8 lg:px-12 py-4 md:py-6 relative z-10"
+      >
+        <motion.button
+          whileTap={{ scale: 0.9 }}
+          onClick={() => onNavigate("profile")}
+          className="w-10 h-10 md:w-12 md:h-12 bg-white/5 border border-white/10 rounded-full flex items-center justify-center hover:bg-gold/20 hover:border-gold/30 transition-all"
+        >
           <FaBars className="text-gold" size={18} />
-        </button>
+        </motion.button>
         <div className="flex items-center gap-2">
           <span className="font-family-script text-lg md:text-2xl text-white">Hi, {firstName}</span>
           <span className="text-lg md:text-2xl">👋</span>
         </div>
-        <button className="w-10 h-10 md:w-12 md:h-12 bg-gold-dark rounded-full flex items-center justify-center relative hover:bg-gold-darker transition-colors">
+        <motion.button
+          whileTap={{ scale: 0.9 }}
+          className="w-10 h-10 md:w-12 md:h-12 bg-white/5 border border-white/10 rounded-full flex items-center justify-center relative hover:bg-gold/20 hover:border-gold/30 transition-all"
+        >
           <FaBell className="text-gold" size={18} />
-          <span className="absolute top-1 right-1 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-navy-900"></span>
-        </button>
-      </div>
+          <span className="absolute top-1 right-1 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-navy-900 animate-pulse" />
+        </motion.button>
+      </motion.div>
 
-      {/* Main Content Grid */}
-      <div className="px-4 md:px-8 lg:px-12 md:grid md:grid-cols-2 md:gap-6 lg:gap-8">
+      {/* Main Content */}
+      <div className="px-4 md:px-8 lg:px-12 md:grid md:grid-cols-2 md:gap-6 lg:gap-8 relative z-10">
         {/* Left Column */}
         <div>
           {/* Wallet Balance Card */}
-          <div className="mb-3 md:mb-4 rounded-2xl overflow-hidden relative bg-gradient-to-r from-blue-600 to-blue-800 p-5 md:p-6 lg:p-8">
-            <div className="absolute top-0 right-0 w-40 h-40 bg-pink-500/30 rounded-full -translate-y-1/2 translate-x-1/4"></div>
-            <div className="absolute bottom-0 right-10 w-24 h-24 bg-purple-500/20 rounded-full translate-y-1/2"></div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="mb-3 md:mb-4 rounded-2xl overflow-hidden relative p-5 md:p-6 lg:p-8"
+            style={{
+              background: "linear-gradient(135deg, #1e40af 0%, #1e3a5f 50%, #172554 100%)",
+            }}
+          >
+            <div className="absolute top-0 right-0 w-40 h-40 bg-pink-500/20 rounded-full -translate-y-1/2 translate-x-1/4 blur-2xl" />
+            <div className="absolute bottom-0 right-10 w-24 h-24 bg-purple-500/15 rounded-full translate-y-1/2 blur-xl" />
+            <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent" />
+
             <div className="relative z-10">
               <p className="font-family-script text-white/80 text-sm md:text-base mb-1">Wallet Balance</p>
               <div className="flex items-center gap-3">
@@ -76,11 +101,18 @@ export default function HomeScreen({ user, onNavigate }) {
                 </button>
               </div>
             </div>
-          </div>
+          </motion.div>
 
           {/* Account Details Card */}
-          <div className="mb-4 md:mb-6 rounded-xl bg-gold-dark/60 p-4 md:p-5 lg:p-6">
-            <div className="flex justify-between items-start">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="mb-4 md:mb-6 rounded-xl p-4 md:p-5 lg:p-6 relative overflow-hidden"
+            style={{ background: "linear-gradient(135deg, rgba(201,162,39,0.15), rgba(201,162,39,0.05))" }}
+          >
+            <div className="absolute inset-0 border border-gold/20 rounded-xl" />
+            <div className="relative z-10 flex justify-between items-start">
               <div className="space-y-1 md:space-y-2">
                 <p className="font-family-script text-gold-light text-sm md:text-base">Account number</p>
                 <p className="font-family-script text-gold-light text-sm md:text-base">Account name</p>
@@ -92,61 +124,94 @@ export default function HomeScreen({ user, onNavigate }) {
                 <p className="font-family-script text-gold-light text-sm md:text-base">{bankName}</p>
               </div>
             </div>
-          </div>
+          </motion.div>
 
           {/* Quick Actions */}
-          <div className="mb-4 md:mb-6 rounded-2xl bg-navy-700 p-5 md:p-6 lg:p-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="mb-4 md:mb-6 rounded-2xl glass-card p-5 md:p-6 lg:p-8"
+          >
             <div className="flex justify-around">
-              {quickActions.map((action) => (
-                <button key={action.label} className="flex flex-col items-center gap-2 md:gap-3 group">
-                  <div className="w-14 h-14 md:w-16 md:h-16 rounded-full border-2 border-gold flex items-center justify-center group-hover:bg-gold/10 transition-colors">
-                    <action.icon className="text-gold" size={22} md:size={26} />
+              {quickActions.map((action, i) => (
+                <motion.button
+                  key={action.label}
+                  whileTap={{ scale: 0.9 }}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: 0.3 + i * 0.1 }}
+                  className="flex flex-col items-center gap-2 md:gap-3 group"
+                >
+                  <div className="w-14 h-14 md:w-16 md:h-16 rounded-full border-2 border-gold/50 flex items-center justify-center group-hover:bg-gold/20 group-hover:border-gold group-hover:shadow-lg group-hover:shadow-gold/20 transition-all">
+                    <action.icon className="text-gold" size={22} />
                   </div>
                   <span className="font-family-script text-white text-xs md:text-sm">{action.label}</span>
-                </button>
+                </motion.button>
               ))}
             </div>
-          </div>
+          </motion.div>
         </div>
 
         {/* Right Column */}
         <div>
           {/* SMS Verification Banner */}
-          <div className="mb-5 md:mb-6 rounded-2xl bg-navy-700 p-4 md:p-6 lg:p-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.25 }}
+            className="mb-5 md:mb-6 rounded-2xl glass-card p-4 md:p-6 lg:p-8"
+          >
             <p className="font-family-script text-white text-center text-lg md:text-xl mb-3">
               Receive Verification SMS Online
             </p>
-            <div className="border-t border-gray-600 mb-3"></div>
+            <div className="border-t border-white/10 mb-3"></div>
             <div className="flex justify-center gap-3 md:gap-4 flex-wrap">
               {socialIcons.map((Icon, i) => (
-                <div key={i} className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-navy-600 flex items-center justify-center hover:bg-navy-500 transition-colors cursor-pointer">
+                <motion.div
+                  key={i}
+                  whileHover={{ scale: 1.2 }}
+                  className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-gold/20 transition-colors cursor-pointer border border-white/10 hover:border-gold/30"
+                >
                   <Icon className="text-white" size={14} md:size={16} />
-                </div>
+                </motion.div>
               ))}
             </div>
             <p className="font-family-script text-gold text-center text-sm md:text-base mt-3">
               Tap here to buy number now
             </p>
-          </div>
+          </motion.div>
 
           {/* Our Services */}
-          <div className="mb-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.35 }}
+            className="mb-4"
+          >
             <h3 className="font-family-script text-white text-xl md:text-2xl mb-4 md:mb-5">Our Services</h3>
-            <div className="rounded-2xl bg-navy-700 p-5 md:p-6 lg:p-8">
+            <div className="rounded-2xl glass-card p-5 md:p-6 lg:p-8">
               <div className="grid grid-cols-4 gap-4 md:gap-6">
-                {services.map((service) => (
-                  <button key={service.label} className="flex flex-col items-center gap-2 md:gap-3 group">
-                    <div className={`w-12 h-12 md:w-14 md:h-14 rounded-full ${service.color} flex items-center justify-center group-hover:scale-110 transition-transform`}>
+                {services.map((service, i) => (
+                  <motion.button
+                    key={service.label}
+                    whileTap={{ scale: 0.9 }}
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 0.35 + i * 0.05 }}
+                    className="flex flex-col items-center gap-2 md:gap-3 group"
+                  >
+                    <div className={`w-12 h-12 md:w-14 md:h-14 rounded-full ${service.color} flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg`}>
                       <service.icon className="text-white" size={20} md:size={24} />
                     </div>
                     <span className="font-family-script text-white text-[10px] md:text-xs text-center leading-tight">
                       {service.label}
                     </span>
-                  </button>
+                  </motion.button>
                 ))}
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
     </div>

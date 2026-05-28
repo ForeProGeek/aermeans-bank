@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import {
   FaUser, FaChevronRight, FaCrown,
   FaIdCard, FaFileAlt, FaLock, FaGift, FaUsers,
@@ -26,12 +27,26 @@ export default function ProfileScreen({ user, onBack, onLogout, theme, onToggleT
   const tier = user?.tier || "REGULAR";
 
   return (
-    <div className="min-h-screen pb-24 md:pb-28">
+    <div className="min-h-screen pb-24 md:pb-28 relative overflow-hidden">
+      {/* Background glow */}
+      <div className="absolute top-0 right-0 w-[300px] h-[300px] bg-blue-600/10 rounded-full blur-[120px] pointer-events-none" />
+
       {/* Profile Header */}
-      <div className="mx-4 md:mx-8 lg:mx-12 mt-4 md:mt-6 mb-4 md:mb-6 rounded-2xl bg-blue-700 p-4 md:p-6 flex items-center justify-between">
-        <div className="flex items-center gap-3 md:gap-4">
-          <div className="w-14 h-14 md:w-16 md:h-16 bg-gold rounded-full flex items-center justify-center">
-            <FaUser className="text-navy-900" size={24} />
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="mx-4 md:mx-8 lg:mx-12 mt-4 md:mt-6 mb-4 md:mb-6 rounded-2xl p-4 md:p-6 flex items-center justify-between relative overflow-hidden"
+        style={{ background: "linear-gradient(135deg, #1e40af, #1e3a5f)" }}
+      >
+        <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent" />
+        <div className="absolute top-[-50%] right-[-10%] w-[200px] h-[200px] bg-gold/10 rounded-full blur-[60px]" />
+
+        <div className="relative z-10 flex items-center gap-3 md:gap-4">
+          <div className="relative">
+            <div className="w-14 h-14 md:w-16 md:h-16 bg-gold rounded-full flex items-center justify-center shadow-xl shadow-gold/30">
+              <FaUser className="text-navy-900" size={24} />
+            </div>
+            <div className="absolute inset-0 bg-gold/30 rounded-full blur-md" />
           </div>
           <div>
             <h3 className="font-family-script text-white text-lg md:text-xl">{displayName}</h3>
@@ -39,44 +54,60 @@ export default function ProfileScreen({ user, onBack, onLogout, theme, onToggleT
             <p className="font-family-script text-gray-300 text-sm md:text-base">Joined {joinedDate}</p>
           </div>
         </div>
-        <span className="px-4 py-1.5 md:px-5 md:py-2 bg-navy-900 rounded-lg font-family-script text-white text-sm md:text-base">
+        <span className="relative z-10 px-4 py-1.5 md:px-5 md:py-2 rounded-lg font-family-script text-white text-sm md:text-base border border-gold/30 bg-gold/10">
           {tier}
         </span>
-      </div>
+      </motion.div>
 
       {/* Menu Items */}
-      <div className="px-4 md:px-8 lg:px-12 md:grid md:grid-cols-2 md:gap-x-6">
-        {menuItems.map((item) => (
-          <button
+      <div className="px-4 md:px-8 lg:px-12 md:grid md:grid-cols-2 md:gap-x-6 relative z-10">
+        {menuItems.map((item, i) => (
+          <motion.button
             key={item.label}
-            className="w-full flex items-center gap-4 py-3.5 md:py-4 border-b border-navy-600/50 group hover:bg-navy-700/30 transition-colors rounded-lg px-2"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: i * 0.04 }}
+            whileHover={{ x: 4 }}
+            whileTap={{ scale: 0.98 }}
+            className="w-full flex items-center gap-4 py-3.5 md:py-4 border-b border-white/10 group hover:bg-white/5 transition-all rounded-lg px-2"
           >
-            <div className="w-10 h-10 md:w-11 md:h-11 bg-gold-dark rounded-full flex items-center justify-center flex-shrink-0">
+            <div className="w-10 h-10 md:w-11 md:h-11 bg-gold/10 border border-gold/20 rounded-full flex items-center justify-center flex-shrink-0 group-hover:bg-gold/25 group-hover:border-gold/50 transition-all">
               <item.icon className="text-gold" size={16} />
             </div>
             <span className="flex-1 text-left font-family-script text-white text-base md:text-lg">
               {item.label}
             </span>
-            <FaChevronRight className="text-gray-500 group-hover:text-white transition-colors" size={14} />
-          </button>
+            <FaChevronRight className="text-gray-500 group-hover:text-gold transition-colors" size={14} />
+          </motion.button>
         ))}
       </div>
 
       {/* Bottom Actions */}
-      <div className="flex items-center justify-around px-4 md:px-8 lg:px-12 py-6 md:py-8 mt-4 md:mt-6">
-        <button onClick={onLogout}
-          className="flex items-center gap-2 text-red-400 font-family-script hover:text-red-300 transition-colors md:text-lg">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.4 }}
+        className="flex items-center justify-around px-4 md:px-8 lg:px-12 py-6 md:py-8 mt-4 md:mt-6 relative z-10"
+      >
+        <motion.button
+          whileTap={{ scale: 0.95 }}
+          onClick={onLogout}
+          className="flex items-center gap-2 text-red-400 font-family-script hover:text-red-300 transition-colors md:text-lg"
+        >
           <FaSignOutAlt size={16} /> Sign out
-        </button>
-        <button onClick={onToggleTheme}
-          className="flex items-center gap-2 text-gray-400 font-family-script hover:text-white transition-colors md:text-lg">
+        </motion.button>
+        <motion.button
+          whileTap={{ scale: 0.95 }}
+          onClick={onToggleTheme}
+          className="flex items-center gap-2 text-gray-400 font-family-script hover:text-gold transition-colors md:text-lg"
+        >
           {isLight ? <FaMoon size={16} /> : <FaSun size={16} />}
           {isLight ? "Dark" : "Light"}
-        </button>
+        </motion.button>
         <button className="flex items-center gap-2 text-gray-400 font-family-script md:text-lg">
           <FaArrowUp size={16} /> Version 1.5.8
         </button>
-      </div>
+      </motion.div>
     </div>
   );
 }

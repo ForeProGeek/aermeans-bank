@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import BottomNav from "./components/BottomNav";
 import LandingScreen from "./screens/LandingScreen";
 import SplashScreen from "./screens/SplashScreen";
@@ -10,6 +11,12 @@ import UsdtWalletScreen from "./screens/UsdtWalletScreen";
 import ProfileScreen from "./screens/ProfileScreen";
 import SupportScreen from "./screens/SupportScreen";
 import { refreshSession, clearSession } from "./data/users";
+
+const screenVariants = {
+  initial: { opacity: 0, x: 30, scale: 0.98 },
+  animate: { opacity: 1, x: 0, scale: 1 },
+  exit: { opacity: 0, x: -30, scale: 0.98 },
+};
 
 function App() {
   const [screen, setScreen] = useState("landing");
@@ -94,16 +101,16 @@ function App() {
     }
   }, [screen]);
 
-  return (
-    <div className="min-h-screen w-full bg-navy-900 relative">
-      {screen === "landing" && <LandingScreen onGetStarted={handleGetStarted} />}
-      {screen === "splash" && <SplashScreen onFinish={handleSplashFinish} />}
-      {screen === "auth" && <AuthScreen onAuthSuccess={handleAuthSuccess} />}
-      {screen === "pin" && <PinLoginScreen onLogin={handlePinSuccess} />}
-      {screen === "home" && <HomeScreen user={user} onNavigate={handleNavigate} />}
-      {screen === "transactions" && <TransactionsScreen />}
-      {screen === "usdt" && <UsdtWalletScreen />}
-      {screen === "profile" && (
+  const renderScreen = () => {
+    switch (screen) {
+      case "landing": return <LandingScreen onGetStarted={handleGetStarted} />;
+      case "splash": return <SplashScreen onFinish={handleSplashFinish} />;
+      case "auth": return <AuthScreen onAuthSuccess={handleAuthSuccess} />;
+      case "pin": return <PinLoginScreen onLogin={handlePinSuccess} />;
+      case "home": return <HomeScreen user={user} onNavigate={handleNavigate} />;
+      case "transactions": return <TransactionsScreen />;
+      case "usdt": return <UsdtWalletScreen />;
+      case "profile": return (
         <ProfileScreen
           user={user}
           onBack={() => handleNavigate("home")}
@@ -111,10 +118,37 @@ function App() {
           theme={theme}
           onToggleTheme={toggleTheme}
         />
-      )}
-      {screen === "support" && <SupportScreen />}
+      );
+      case "support": return <SupportScreen />;
+      default: return <LandingScreen onGetStarted={handleGetStarted} />;
+    }
+  };
 
-      {showBottomNav && <BottomNav activeTab={activeTab} onTabChange={handleTabChange} />}
+  return (
+    <div className="min-h-screen w-full bg-navy-900 relative overflow-hidden">
+      {/* Global ambient glow */}
+      <div className="fixed inset-0 pointer-events-none z-0">
+        <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-blue-900/20 rounded-full blur-[150px]" />
+        <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-gold/10 rounded-full blur-[150px]" />
+      </div>
+
+      <div className="relative z-10 w-full min-h-screen">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={screen}
+            variants={screenVariants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            transition={{ duration: 0.35, ease: [0.32, 0.72, 0, 1] }}
+            className="w-full min-h-screen"
+          >
+            {renderScreen()}
+          </motion.div>
+        </AnimatePresence>
+
+        {showBottomNav && <BottomNav activeTab={activeTab} onTabChange={handleTabChange} />}
+      </div>
     </div>
   );
 }
