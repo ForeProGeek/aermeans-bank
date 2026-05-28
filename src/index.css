@@ -62,3 +62,39 @@ html.light-mode .text-gray-500 { color: #a0aec0; }
 .animate-shake {
   animation: shake 0.4s ease-in-out;
 }
+
+/* Floating particles for landing page */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0) translateX(0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100vh) translateX(20px);
+    opacity: 0;
+  }
+}
+.animate-float {
+  animation: float linear infinite;
+}
+
+/* Gradient text utility */
+.text-gradient-gold {
+  background: linear-gradient(90deg, #c9a227, #f0d878, #c9a227);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Glass card effect */
+.glass-card {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}

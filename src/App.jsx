@@ -17,6 +17,20 @@ function App() {
   const [theme, setTheme] = useState("dark");
   const [user, setUser] = useState(null);
 
+  // On mount: skip landing on mobile (< 768px), go straight to splash
+  useEffect(() => {
+    const isMobile = window.innerWidth < 768;
+    if (isMobile) {
+      const session = refreshSession();
+      if (session) {
+        setUser(session);
+        setScreen("pin");
+      } else {
+        setScreen("splash");
+      }
+    }
+  }, []);
+
   useEffect(() => {
     const savedTheme = localStorage.getItem("aermeans-theme");
     if (savedTheme) setTheme(savedTheme);
@@ -32,12 +46,10 @@ function App() {
     localStorage.setItem("aermeans-theme", theme);
   }, [theme]);
 
-  // Landing → Get Started
   const handleGetStarted = () => {
     setScreen("splash");
   };
 
-  // Splash finished → check session
   const handleSplashFinish = () => {
     const session = refreshSession();
     if (session) {
