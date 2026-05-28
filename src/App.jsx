@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import BottomNav from "./components/BottomNav";
+import LandingScreen from "./screens/LandingScreen";
 import SplashScreen from "./screens/SplashScreen";
 import AuthScreen from "./screens/AuthScreen";
 import PinLoginScreen from "./screens/PinLoginScreen";
@@ -11,7 +12,7 @@ import SupportScreen from "./screens/SupportScreen";
 import { refreshSession, clearSession } from "./data/users";
 
 function App() {
-  const [screen, setScreen] = useState("splash");
+  const [screen, setScreen] = useState("landing");
   const [activeTab, setActiveTab] = useState("home");
   const [theme, setTheme] = useState("dark");
   const [user, setUser] = useState(null);
@@ -31,6 +32,12 @@ function App() {
     localStorage.setItem("aermeans-theme", theme);
   }, [theme]);
 
+  // Landing → Get Started
+  const handleGetStarted = () => {
+    setScreen("splash");
+  };
+
+  // Splash finished → check session
   const handleSplashFinish = () => {
     const session = refreshSession();
     if (session) {
@@ -85,6 +92,7 @@ function App() {
   return (
     <div className="min-h-screen w-full bg-navy-900">
       <div className="w-full max-w-6xl mx-auto min-h-screen relative">
+        {screen === "landing" && <LandingScreen onGetStarted={handleGetStarted} />}
         {screen === "splash" && <SplashScreen onFinish={handleSplashFinish} />}
         {screen === "auth" && <AuthScreen onAuthSuccess={handleAuthSuccess} />}
         {screen === "pin" && <PinLoginScreen onLogin={handlePinSuccess} />}
