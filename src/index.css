@@ -25,6 +25,25 @@ html, body, #root {
   overflow-x: hidden;
 }
 
+/* Light mode overrides */
+html.light-mode,
+html.light-mode body,
+html.light-mode #root {
+  background-color: #f0f4f8;
+  color: #1a202c;
+}
+
+html.light-mode .bg-navy-900 { background-color: #f0f4f8; }
+html.light-mode .bg-navy-800 { background-color: #e2e8f0; }
+html.light-mode .bg-navy-700 { background-color: #ffffff; }
+html.light-mode .bg-navy-600 { background-color: #cbd5e0; }
+html.light-mode .bg-navy-500 { background-color: #a0aec0; }
+html.light-mode .border-navy-600 { border-color: #cbd5e0; }
+html.light-mode .border-navy-600\/50 { border-color: rgb(203 213 224 / 0.5); }
+html.light-mode .text-white { color: #1a202c; }
+html.light-mode .text-gray-400 { color: #718096; }
+html.light-mode .text-gray-500 { color: #a0aec0; }
+
 /* Hide scrollbar */
 .scrollbar-hide {
   -ms-overflow-style: none;
@@ -32,16 +51,6 @@ html, body, #root {
 }
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
-}
-
-/* Wave decoration for splash */
-.wave-bottom {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  overflow: hidden;
-  line-height: 0;
 }
 
 /* PIN dot */
@@ -54,6 +63,16 @@ html, body, #root {
 }
 .pin-dot.filled {
   background-color: #c9a227;
+}
+
+/* Shake animation for PIN error */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-6px); }
+  20%, 40%, 60%, 80% { transform: translateX(6px); }
+}
+.animate-shake {
+  animation: shake 0.4s ease-in-out;
 }
 
 /* Bottom nav active bubble */

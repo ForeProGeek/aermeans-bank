@@ -3,7 +3,7 @@ import {
   FaBars, FaBell, FaEye, FaEyeSlash, FaUniversity,
   FaPaperPlane, FaGift, FaWifi, FaMobileAlt,
   FaDice, FaHashtag, FaTv, FaSun,
-  FaBuilding, FaCheckCircle, FaChevronRight,
+  FaBuilding, FaCheckCircle,
   FaFacebook, FaWhatsapp, FaInstagram, FaGooglePlus,
   FaTelegram, FaAmazon, FaPaypal, FaYoutube
 } from "react-icons/fa";
@@ -37,7 +37,10 @@ export default function HomeScreen({ onNavigate }) {
     <div className="min-h-full pb-24">
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-4">
-        <button className="w-10 h-10 bg-gold-dark rounded-full flex items-center justify-center">
+        <button
+          onClick={() => onNavigate("profile")}
+          className="w-10 h-10 bg-gold-dark rounded-full flex items-center justify-center"
+        >
           <FaBars className="text-gold" size={18} />
         </button>
         <div className="flex items-center gap-2">

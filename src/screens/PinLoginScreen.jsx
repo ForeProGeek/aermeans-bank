@@ -1,22 +1,35 @@
 import { useState } from "react";
 import { FaUser, FaHeadphones, FaFingerprint, FaBackspace } from "react-icons/fa";
 
+const CORRECT_PIN = "123456";
+
 export default function PinLoginScreen({ onLogin }) {
   const [pin, setPin] = useState("");
+  const [error, setError] = useState(false);
   const maxPinLength = 6;
 
   const handleNumber = (num) => {
     if (pin.length < maxPinLength) {
       const newPin = pin + num;
       setPin(newPin);
+      setError(false);
+
       if (newPin.length === maxPinLength) {
-        setTimeout(() => onLogin(), 300);
+        setTimeout(() => {
+          if (newPin === CORRECT_PIN) {
+            onLogin();
+          } else {
+            setError(true);
+            setPin("");
+          }
+        }, 200);
       }
     }
   };
 
   const handleDelete = () => {
     setPin((prev) => prev.slice(0, -1));
+    setError(false);
   };
 
   const numbers = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
@@ -34,7 +47,7 @@ export default function PinLoginScreen({ onLogin }) {
       </div>
 
       {/* Avatar + Welcome */}
-      <div className="flex flex-col items-center mb-8">
+      <div className="flex flex-col items-center mb-6">
         <div className="w-20 h-20 bg-gold-dark rounded-full flex items-center justify-center mb-4">
           <FaUser className="text-gold" size={36} />
         </div>
@@ -47,16 +60,26 @@ export default function PinLoginScreen({ onLogin }) {
       </div>
 
       {/* PIN dots */}
-      <div className="flex items-center justify-center gap-4 mb-8">
+      <div className={`flex items-center justify-center gap-4 mb-2 ${error ? "animate-shake" : ""}`}>
         {Array.from({ length: maxPinLength }).map((_, i) => (
           <div
             key={i}
             className={`w-4 h-4 rounded-full transition-all duration-200 ${
-              i < pin.length ? "bg-gold" : "bg-navy-500"
+              error
+                ? "bg-red-500"
+                : i < pin.length
+                ? "bg-gold"
+                : "bg-navy-500"
             }`}
           />
         ))}
       </div>
+
+      {error && (
+        <p className="text-red-400 text-sm text-center mb-2 font-medium">
+          Incorrect PIN. Try again.
+        </p>
+      )}
 
       {/* Divider */}
       <div className="border-t border-gray-700 mb-4"></div>
@@ -99,6 +122,10 @@ export default function PinLoginScreen({ onLogin }) {
           </button>
         </div>
       </div>
+
+      <p className="text-center text-gray-500 text-xs mt-4">
+        Default PIN: <span className="text-gold">123456</span>
+      </p>
     </div>
   );
 }

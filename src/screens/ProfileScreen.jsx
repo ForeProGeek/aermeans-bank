@@ -1,8 +1,8 @@
 import {
-  FaUser, FaChevronRight, FaArrowRight, FaCrown,
+  FaUser, FaChevronRight, FaCrown,
   FaIdCard, FaFileAlt, FaLock, FaGift, FaUsers,
   FaInfoCircle, FaFileContract, FaShieldAlt, FaSignOutAlt,
-  FaSun, FaArrowUp
+  FaSun, FaMoon, FaArrowUp
 } from "react-icons/fa";
 
 const menuItems = [
@@ -18,7 +18,9 @@ const menuItems = [
   { icon: FaShieldAlt, label: "Privacy and policy" },
 ];
 
-export default function ProfileScreen({ onBack }) {
+export default function ProfileScreen({ onBack, theme, onToggleTheme }) {
+  const isLight = theme === "light";
+
   return (
     <div className="min-h-full pb-24">
       {/* Profile Header */}
@@ -61,8 +63,12 @@ export default function ProfileScreen({ onBack }) {
         <button className="flex items-center gap-2 text-red-400 font-family-script">
           <FaSignOutAlt size={16} /> Sign out
         </button>
-        <button className="flex items-center gap-2 text-gray-400 font-family-script">
-          <FaSun size={16} /> Theme
+        <button
+          onClick={onToggleTheme}
+          className="flex items-center gap-2 text-gray-400 font-family-script hover:text-white transition-colors"
+        >
+          {isLight ? <FaMoon size={16} /> : <FaSun size={16} />}
+          {isLight ? "Dark" : "Light"}
         </button>
         <button className="flex items-center gap-2 text-gray-400 font-family-script">
           <FaArrowUp size={16} /> Version 1.5.8
