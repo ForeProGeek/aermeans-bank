@@ -34,7 +34,7 @@ export default function PinLoginScreen({ onLogin }) {
 
   return (
     <div className="min-h-screen w-full flex flex-col px-6 py-8 md:items-center md:justify-center">
-      <div className="w-full max-w-md md:max-w-lg mx-auto">
+      <div className="w-full max-w-lg mx-auto">
         {/* Header */}
         <div className="flex items-center justify-between mb-8 md:mb-10">
           <div className="w-10 h-10 md:w-12 md:h-12 bg-blue-500 rounded-full flex items-center justify-center">
@@ -48,7 +48,7 @@ export default function PinLoginScreen({ onLogin }) {
         {/* Avatar + Welcome */}
         <div className="flex flex-col items-center mb-8 md:mb-10">
           <div className="w-20 h-20 md:w-24 md:h-24 bg-gold-dark rounded-full flex items-center justify-center mb-4">
-            <FaUser className="text-gold" size={36} md:size={48} />
+            <FaUser className="text-gold" size={36} />
           </div>
           <h2 className="font-family-script text-2xl md:text-3xl text-white mb-1">
             Welcome back, {userName}! 👋
@@ -94,11 +94,11 @@ export default function PinLoginScreen({ onLogin }) {
             0
           </button>
           <button className="w-16 h-16 md:w-20 md:h-20 mx-auto flex items-center justify-center text-gold active:scale-95 transition-transform">
-            <FaFingerprint size={28} md:size={32} />
+            <FaFingerprint size={28} />
           </button>
           <button onClick={handleDelete}
             className="w-16 h-16 md:w-20 md:h-20 mx-auto bg-red-500/80 rounded-full flex items-center justify-center text-white active:scale-95 transition-transform hover:bg-red-600">
-            <FaBackspace size={20} md:size={24} />
+            <FaBackspace size={20} />
           </button>
         </div>
       </div>

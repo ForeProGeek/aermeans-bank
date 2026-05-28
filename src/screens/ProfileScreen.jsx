@@ -28,7 +28,7 @@ export default function ProfileScreen({ user, onBack, onLogout, theme, onToggleT
   return (
     <div className="min-h-screen pb-24 md:pb-28">
       {/* Profile Header */}
-      <div className="mx-4 md:mx-8 mt-4 md:mt-6 mb-4 md:mb-6 rounded-2xl bg-blue-700 p-4 md:p-6 flex items-center justify-between">
+      <div className="mx-4 md:mx-8 lg:mx-12 mt-4 md:mt-6 mb-4 md:mb-6 rounded-2xl bg-blue-700 p-4 md:p-6 flex items-center justify-between">
         <div className="flex items-center gap-3 md:gap-4">
           <div className="w-14 h-14 md:w-16 md:h-16 bg-gold rounded-full flex items-center justify-center">
             <FaUser className="text-navy-900" size={24} />
@@ -45,7 +45,7 @@ export default function ProfileScreen({ user, onBack, onLogout, theme, onToggleT
       </div>
 
       {/* Menu Items */}
-      <div className="px-4 md:px-8 md:grid md:grid-cols-2 md:gap-x-6">
+      <div className="px-4 md:px-8 lg:px-12 md:grid md:grid-cols-2 md:gap-x-6">
         {menuItems.map((item) => (
           <button
             key={item.label}
@@ -63,7 +63,7 @@ export default function ProfileScreen({ user, onBack, onLogout, theme, onToggleT
       </div>
 
       {/* Bottom Actions */}
-      <div className="flex items-center justify-around px-4 md:px-8 py-6 md:py-8 mt-4 md:mt-6">
+      <div className="flex items-center justify-around px-4 md:px-8 lg:px-12 py-6 md:py-8 mt-4 md:mt-6">
         <button onClick={onLogout}
           className="flex items-center gap-2 text-red-400 font-family-script hover:text-red-300 transition-colors md:text-lg">
           <FaSignOutAlt size={16} /> Sign out

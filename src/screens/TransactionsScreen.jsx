@@ -15,12 +15,12 @@ export default function TransactionsScreen() {
   return (
     <div className="min-h-screen pb-24 md:pb-28">
       {/* Header */}
-      <div className="px-4 md:px-8 py-4 md:py-6 border-b border-navy-600">
+      <div className="px-4 md:px-8 lg:px-12 py-4 md:py-6 border-b border-navy-600">
         <h2 className="font-family-script text-white text-2xl md:text-3xl text-center">Transactions</h2>
       </div>
 
       {/* Filter */}
-      <div className="flex items-center justify-end gap-4 px-4 md:px-8 py-3 md:py-4">
+      <div className="flex items-center justify-end gap-4 px-4 md:px-8 lg:px-12 py-3 md:py-4">
         <button className="flex items-center gap-2 text-gold font-family-script md:text-lg hover:text-gold-light transition-colors">
           Filter <FaFilter size={14} />
         </button>
@@ -30,7 +30,7 @@ export default function TransactionsScreen() {
       </div>
 
       {/* Transaction List */}
-      <div className="px-4 md:px-8 space-y-3 md:space-y-4 md:grid md:grid-cols-2 md:gap-4">
+      <div className="px-4 md:px-8 lg:px-12 space-y-3 md:space-y-4 md:grid md:grid-cols-2 md:gap-4">
         {transactions.map((tx) => (
           <div key={tx.id} className="flex items-center gap-3 md:gap-4 bg-navy-700/50 rounded-xl p-3 md:p-4 hover:bg-navy-700 transition-colors">
             <div className={`w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center flex-shrink-0 ${tx.type === "debit" ? "bg-blue-500/20" : "bg-green-500/20"}`}>

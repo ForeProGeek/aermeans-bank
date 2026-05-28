@@ -56,7 +56,7 @@ export default function AuthScreen({ onAuthSuccess }) {
 
   return (
     <div className="min-h-screen w-full flex items-center justify-center px-4 py-8">
-      <div className="w-full max-w-md md:max-w-lg">
+      <div className="w-full max-w-lg">
         {/* Logo */}
         <div className="flex flex-col items-center mb-8">
           <div className="w-16 h-16 md:w-20 md:h-20 bg-gold rounded-2xl flex items-center justify-center mb-3">

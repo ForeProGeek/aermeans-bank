@@ -4,11 +4,11 @@ export default function UsdtWalletScreen() {
   return (
     <div className="min-h-screen pb-24 md:pb-28">
       {/* Header */}
-      <div className="px-4 md:px-8 py-4 md:py-6">
+      <div className="px-4 md:px-8 lg:px-12 py-4 md:py-6">
         <h2 className="font-family-script text-white text-2xl md:text-3xl text-center">USDT Wallet</h2>
       </div>
 
-      <div className="px-4 md:px-8 md:grid md:grid-cols-2 md:gap-6">
+      <div className="px-4 md:px-8 lg:px-12 md:grid md:grid-cols-2 md:gap-6 lg:gap-8">
         {/* Balance Card */}
         <div className="mb-5 md:mb-0 rounded-2xl bg-navy-700 p-5 md:p-8">
           <div className="flex items-center justify-between mb-4 md:mb-6">

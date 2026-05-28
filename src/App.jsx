@@ -17,7 +17,6 @@ function App() {
   const [theme, setTheme] = useState("dark");
   const [user, setUser] = useState(null);
 
-  // On mount: skip landing on mobile (< 768px), go straight to splash
   useEffect(() => {
     const isMobile = window.innerWidth < 768;
     if (isMobile) {
@@ -46,9 +45,7 @@ function App() {
     localStorage.setItem("aermeans-theme", theme);
   }, [theme]);
 
-  const handleGetStarted = () => {
-    setScreen("splash");
-  };
+  const handleGetStarted = () => setScreen("splash");
 
   const handleSplashFinish = () => {
     const session = refreshSession();
@@ -66,9 +63,7 @@ function App() {
     setScreen("pin");
   };
 
-  const handlePinSuccess = () => {
-    setScreen("home");
-  };
+  const handlePinSuccess = () => setScreen("home");
 
   const handleTabChange = (tab) => {
     setActiveTab(tab);
@@ -88,9 +83,7 @@ function App() {
     setScreen("auth");
   };
 
-  const toggleTheme = () => {
-    setTheme((prev) => (prev === "dark" ? "light" : "dark"));
-  };
+  const toggleTheme = () => setTheme((prev) => (prev === "dark" ? "light" : "dark"));
 
   const showBottomNav = ["home", "transactions", "usdt", "support", "profile"].includes(screen);
 
@@ -102,30 +95,26 @@ function App() {
   }, [screen]);
 
   return (
-    <div className="min-h-screen w-full bg-navy-900">
-      <div className="w-full max-w-6xl mx-auto min-h-screen relative">
-        {screen === "landing" && <LandingScreen onGetStarted={handleGetStarted} />}
-        {screen === "splash" && <SplashScreen onFinish={handleSplashFinish} />}
-        {screen === "auth" && <AuthScreen onAuthSuccess={handleAuthSuccess} />}
-        {screen === "pin" && <PinLoginScreen onLogin={handlePinSuccess} />}
-        {screen === "home" && <HomeScreen user={user} onNavigate={handleNavigate} />}
-        {screen === "transactions" && <TransactionsScreen />}
-        {screen === "usdt" && <UsdtWalletScreen />}
-        {screen === "profile" && (
-          <ProfileScreen
-            user={user}
-            onBack={() => handleNavigate("home")}
-            onLogout={handleLogout}
-            theme={theme}
-            onToggleTheme={toggleTheme}
-          />
-        )}
-        {screen === "support" && <SupportScreen />}
+    <div className="min-h-screen w-full bg-navy-900 relative">
+      {screen === "landing" && <LandingScreen onGetStarted={handleGetStarted} />}
+      {screen === "splash" && <SplashScreen onFinish={handleSplashFinish} />}
+      {screen === "auth" && <AuthScreen onAuthSuccess={handleAuthSuccess} />}
+      {screen === "pin" && <PinLoginScreen onLogin={handlePinSuccess} />}
+      {screen === "home" && <HomeScreen user={user} onNavigate={handleNavigate} />}
+      {screen === "transactions" && <TransactionsScreen />}
+      {screen === "usdt" && <UsdtWalletScreen />}
+      {screen === "profile" && (
+        <ProfileScreen
+          user={user}
+          onBack={() => handleNavigate("home")}
+          onLogout={handleLogout}
+          theme={theme}
+          onToggleTheme={toggleTheme}
+        />
+      )}
+      {screen === "support" && <SupportScreen />}
 
-        {showBottomNav && (
-          <BottomNav activeTab={activeTab} onTabChange={handleTabChange} />
-        )}
-      </div>
+      {showBottomNav && <BottomNav activeTab={activeTab} onTabChange={handleTabChange} />}
     </div>
   );
 }

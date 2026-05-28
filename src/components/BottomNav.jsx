@@ -10,7 +10,7 @@ const tabs = [
 export default function BottomNav({ activeTab, onTabChange }) {
   return (
     <nav className="fixed bottom-0 left-0 w-full bg-navy-800 border-t border-navy-600 z-50">
-      <div className="max-w-6xl mx-auto flex items-center justify-around py-2 md:py-3">
+      <div className="w-full flex items-center justify-around py-2 md:py-3">
         {tabs.map((tab) => {
           const isActive = activeTab === tab.id;
           const Icon = tab.icon;

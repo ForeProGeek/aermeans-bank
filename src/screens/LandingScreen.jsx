@@ -76,12 +76,10 @@ export default function LandingScreen({ onGetStarted }) {
           ANIMATED BACKGROUND
       ═══════════════════════════════════════ */}
       <div className="absolute inset-0 pointer-events-none">
-        {/* Giant blurred glow orbs */}
         <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-blue-600/20 rounded-full blur-[120px] animate-pulse" />
         <div className="absolute bottom-[-10%] right-[-10%] w-[600px] h-[600px] bg-gold/10 rounded-full blur-[150px] animate-pulse" style={{ animationDelay: "1s" }} />
         <div className="absolute top-[40%] left-[50%] w-[400px] h-[400px] bg-purple-600/10 rounded-full blur-[100px] animate-pulse" style={{ animationDelay: "2s" }} />
 
-        {/* Floating gold particles */}
         {Array.from({ length: 20 }).map((_, i) => (
           <div
             key={i}
@@ -95,7 +93,6 @@ export default function LandingScreen({ onGetStarted }) {
           />
         ))}
 
-        {/* Subtle grid overlay */}
         <div
           className="absolute inset-0 opacity-[0.03]"
           style={{
@@ -109,7 +106,7 @@ export default function LandingScreen({ onGetStarted }) {
           HERO SECTION
       ═══════════════════════════════════════ */}
       <section className="relative z-10 px-8 md:px-16 lg:px-24 pt-16 pb-24">
-        <div className="max-w-6xl mx-auto">
+        <div className="w-full">
           {/* Nav */}
           <motion.nav
             initial={{ opacity: 0, y: -20 }}
@@ -190,7 +187,7 @@ export default function LandingScreen({ onGetStarted }) {
           STATS BAR
       ═══════════════════════════════════════ */}
       <section className="relative z-10 border-y border-white/5 bg-white/[0.02] backdrop-blur-sm">
-        <div className="max-w-6xl mx-auto px-8 md:px-16 py-12 grid grid-cols-3 gap-8">
+        <div className="w-full px-8 md:px-16 py-12 grid grid-cols-3 gap-8">
           {[
             { value: 50000, suffix: "+", label: "Active Users" },
             { value: 2000000000, suffix: "", label: "Naira Transacted", prefix: "₦" },
@@ -213,7 +210,7 @@ export default function LandingScreen({ onGetStarted }) {
           FEATURES SECTION
       ═══════════════════════════════════════ */}
       <section className="relative z-10 px-8 md:px-16 py-24">
-        <div className="max-w-6xl mx-auto">
+        <div className="w-full">
           <FadeUp>
             <div className="text-center mb-16">
               <p className="text-gold text-sm font-semibold uppercase tracking-widest mb-3">Features</p>
@@ -249,7 +246,7 @@ export default function LandingScreen({ onGetStarted }) {
           HOW IT WORKS
       ═══════════════════════════════════════ */}
       <section className="relative z-10 px-8 md:px-16 py-24 bg-white/[0.02]">
-        <div className="max-w-6xl mx-auto">
+        <div className="w-full">
           <FadeUp>
             <div className="text-center mb-16">
               <p className="text-gold text-sm font-semibold uppercase tracking-widest mb-3">Process</p>
@@ -259,7 +256,6 @@ export default function LandingScreen({ onGetStarted }) {
           </FadeUp>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
-            {/* Connector line */}
             <div className="hidden md:block absolute top-16 left-[16%] right-[16%] h-0.5 bg-gradient-to-r from-gold/0 via-gold/30 to-gold/0" />
 
             {steps.map((s, i) => (
@@ -284,7 +280,7 @@ export default function LandingScreen({ onGetStarted }) {
           TESTIMONIALS
       ═══════════════════════════════════════ */}
       <section className="relative z-10 px-8 md:px-16 py-24">
-        <div className="max-w-6xl mx-auto">
+        <div className="w-full">
           <FadeUp>
             <div className="text-center mb-16">
               <p className="text-gold text-sm font-semibold uppercase tracking-widest mb-3">Testimonials</p>
@@ -318,7 +314,7 @@ export default function LandingScreen({ onGetStarted }) {
           TRUST BADGES
       ═══════════════════════════════════════ */}
       <section className="relative z-10 px-8 md:px-16 py-16 bg-white/[0.02]">
-        <div className="max-w-4xl mx-auto">
+        <div className="w-full">
           <FadeUp>
             <div className="flex flex-wrap items-center justify-center gap-8 md:gap-12">
               {[
@@ -343,8 +339,7 @@ export default function LandingScreen({ onGetStarted }) {
       ═══════════════════════════════════════ */}
       <section className="relative z-10 px-8 md:px-16 py-24">
         <FadeUp>
-          <div className="max-w-3xl mx-auto text-center relative">
-            {/* Glowing orb behind */}
+          <div className="w-full text-center relative">
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gold/10 rounded-full blur-[100px]" />
 
             <div className="relative z-10">
@@ -374,7 +369,7 @@ export default function LandingScreen({ onGetStarted }) {
           FOOTER
       ═══════════════════════════════════════ */}
       <footer className="relative z-10 border-t border-white/5 bg-[#040810] px-8 md:px-16 py-12">
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+        <div className="w-full flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 bg-gold rounded-lg flex items-center justify-center">
               <span className="text-navy-900 font-bold text-sm">æ</span>

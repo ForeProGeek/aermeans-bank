@@ -11,19 +11,19 @@ export default function SupportScreen() {
   return (
     <div className="min-h-screen pb-24 md:pb-28">
       {/* Header */}
-      <div className="px-4 md:px-8 py-4 md:py-6">
+      <div className="px-4 md:px-8 lg:px-12 py-4 md:py-6">
         <h2 className="font-family-script text-white text-2xl md:text-3xl text-center">Support</h2>
       </div>
 
       {/* Subtitle */}
-      <div className="px-4 md:px-8 mb-6 md:mb-8">
+      <div className="px-4 md:px-8 lg:px-12 mb-6 md:mb-8">
         <p className="font-family-script text-white text-xl md:text-2xl">
           How can we help you today?
         </p>
       </div>
 
       {/* Support Options */}
-      <div className="px-4 md:px-8 md:grid md:grid-cols-2 md:gap-4">
+      <div className="px-4 md:px-8 lg:px-12 md:grid md:grid-cols-2 md:gap-4">
         {supportOptions.map((option) => (
           <button
             key={option.title}
