@@ -1,0 +1,75 @@
+@import "tailwindcss";
+
+@theme {
+  --color-navy-900: #0a1628;
+  --color-navy-800: #0f1f3d;
+  --color-navy-700: #132242;
+  --color-navy-600: #1a2d4d;
+  --color-navy-500: #1e3a5f;
+  --color-gold: #c9a227;
+  --color-gold-light: #d4af37;
+  --color-gold-dark: #5c4d1a;
+  --color-gold-darker: #4a3d15;
+  --font-family-sans: "Inter", system-ui, sans-serif;
+  --font-family-script: "Dancing Script", cursive;
+  --font-family-pacifico: "Pacifico", cursive;
+}
+
+html, body, #root {
+  height: 100%;
+  background-color: #0a1628;
+  color: #ffffff;
+  font-family: "Inter", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* Hide scrollbar */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Wave decoration for splash */
+.wave-bottom {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  overflow: hidden;
+  line-height: 0;
+}
+
+/* PIN dot */
+.pin-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background-color: #1e3a5f;
+  transition: background-color 0.2s;
+}
+.pin-dot.filled {
+  background-color: #c9a227;
+}
+
+/* Bottom nav active bubble */
+.nav-active {
+  position: relative;
+}
+.nav-active::before {
+  content: '';
+  position: absolute;
+  top: -24px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 56px;
+  height: 56px;
+  background: #0f2744;
+  border-radius: 50%;
+  border: 3px solid #0a1628;
+  z-index: -1;
+}
