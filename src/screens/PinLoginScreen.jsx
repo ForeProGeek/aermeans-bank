@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { FaUser, FaHeadphones, FaFingerprint, FaBackspace } from "react-icons/fa";
+import { FaUser, FaHeadphones, FaBackspace } from "react-icons/fa";
 import { refreshSession } from "../data/users";
 
 export default function PinLoginScreen({ onLogin }) {
@@ -122,21 +122,13 @@ export default function PinLoginScreen({ onLogin }) {
           >
             0
           </motion.button>
-          <motion.button
-            whileTap={{ scale: 0.9 }}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.28 }}
-            className="w-16 h-16 md:w-20 md:h-20 mx-auto flex items-center justify-center text-gold active:text-gold-light transition-colors"
-          >
-            <FaFingerprint size={28} />
-          </motion.button>
+          <div className="w-16 h-16 md:w-20 md:h-20 mx-auto" />
           <motion.button
             onClick={handleDelete}
             whileTap={{ scale: 0.9 }}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.29 }}
+            transition={{ delay: 0.28 }}
             className="w-16 h-16 md:w-20 md:h-20 mx-auto bg-red-500/80 rounded-full flex items-center justify-center text-white active:bg-red-600 transition-colors hover:shadow-lg hover:shadow-red-500/30"
           >
             <FaBackspace size={20} />

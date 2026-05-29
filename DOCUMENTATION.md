@@ -1,6 +1,6 @@
 # Aermeans Bank App — Complete Code Documentation
 
-> A mobile-first fintech web application built with **React + Vite + Tailwind CSS v4**. Features user authentication, PIN login, unique account number generation, wallet dashboard, transaction history, USDT crypto wallet, profile management, and customer support.
+> A mobile-first fintech web application built with **React + Vite + Tailwind CSS v4 + Framer Motion**. Features a desktop-only marketing landing page, user authentication, PIN login, unique account number generation, wallet dashboard, transaction history, USDT crypto wallet, profile management, and customer support — all with premium animations and visual flair.
 
 ---
 
@@ -13,11 +13,12 @@
 5. [State & Data Layer](#5-state--data-layer)
 6. [Screen Components](#6-screen-components)
 7. [Shared Components](#7-shared-components)
-8. [Styling & Theme](#8-styling--theme)
+8. [Styling, Theme & Animations](#8-styling-theme--animations)
 9. [Authentication Flow](#9-authentication-flow)
 10. [Responsive Design Strategy](#10-responsive-design-strategy)
-11. [LocalStorage Schema](#11-localstorage-schema)
-12. [How to Run & Extend](#12-how-to-run--extend)
+11. [Desktop-Only Landing Page](#11-desktop-only-landing-page)
+12. [LocalStorage Schema](#12-localstorage-schema)
+13. [How to Run & Extend](#13-how-to-run--extend)
 
 ---
 
@@ -29,6 +30,7 @@
 | **Framework** | React 19 | Component-based UI architecture |
 | **Styling** | Tailwind CSS v4 | Utility-first responsive styling with `@theme` |
 | **PostCSS** | `@tailwindcss/postcss` | Tailwind v4 PostCSS plugin |
+| **Animations** | Framer Motion | Screen transitions, scroll reveals, hover effects, gestures |
 | **Icons** | `react-icons/fa` | FontAwesome icons throughout the app |
 | **Fonts** | Google Fonts (Inter, Dancing Script, Pacifico) | Body text + script headings |
 | **Persistence** | `localStorage` | User data, session, theme preference |
@@ -42,23 +44,25 @@ aermeans-bank/
 ├── index.html                    # HTML entry point + Google Fonts
 ├── postcss.config.js             # PostCSS config for Tailwind v4
 ├── package.json                  # Dependencies & scripts
+├── DOCUMENTATION.md              # This file
 ├── src/
 │   ├── main.jsx                  # React root renderer
-│   ├── App.jsx                   # Main router & global state
-│   ├── index.css                 # Tailwind v4 theme + custom styles
+│   ├── App.jsx                   # Main router, global state, screen transitions
+│   ├── index.css                 # Tailwind v4 theme + custom animations
 │   ├── data/
 │   │   └── users.js              # User CRUD, auth, account number generator
 │   ├── components/
-│   │   └── BottomNav.jsx         # Bottom tab navigation bar
+│   │   └── BottomNav.jsx         # Bottom tab navigation with flair
 │   └── screens/
-│       ├── SplashScreen.jsx      # Branded splash/loading screen
-│       ├── AuthScreen.jsx        # Login + Signup forms
-│       ├── PinLoginScreen.jsx    # 6-digit PIN keypad
-│       ├── HomeScreen.jsx        # Dashboard (balance, services)
-│       ├── TransactionsScreen.jsx# Transaction history list
-│       ├── UsdtWalletScreen.jsx  # Crypto wallet (USDT TRC-20)
-│       ├── ProfileScreen.jsx     # User profile + settings menu
-│       └── SupportScreen.jsx     # Customer support options
+│       ├── LandingScreen.jsx     # Desktop-only marketing page with animations
+│       ├── SplashScreen.jsx      # Branded splash with particles & loading bar
+│       ├── AuthScreen.jsx        # Login + Signup with glassmorphism
+│       ├── PinLoginScreen.jsx    # 6-digit PIN keypad with animated dots
+│       ├── HomeScreen.jsx        # Dashboard with glass cards & glow effects
+│       ├── TransactionsScreen.jsx# Animated transaction list with hover effects
+│       ├── UsdtWalletScreen.jsx  # Crypto wallet with glowing CTAs
+│       ├── ProfileScreen.jsx     # User profile with staggered menu animations
+│       └── SupportScreen.jsx     # Support options with glass cards
 ```
 
 ---
@@ -86,20 +90,19 @@ createRoot(document.getElementById('root')).render(
 ```
 
 - **React 19 `createRoot`** API — the modern way to render React apps
-- **StrictMode** — helps detect potential problems (double-renders in dev, deprecated API warnings)
+- **StrictMode** — helps detect potential problems
 - Imports `index.css` globally so Tailwind utilities are available everywhere
-- Mounts `<App />` into the DOM
 
 ---
 
 ## 4. Core Router (`App.jsx`)
 
-`App.jsx` is the **single source of truth** for the entire application's screen state. There is no React Router — navigation is handled by conditional rendering based on a `screen` state string.
+`App.jsx` is the **single source of truth** for the entire application's screen state. There is no React Router — navigation is handled by conditional rendering within `AnimatePresence` for smooth transitions.
 
 ### State Variables
 
 ```jsx
-const [screen, setScreen] = useState("splash");      // Current visible screen
+const [screen, setScreen] = useState("landing");      // Current visible screen
 const [activeTab, setActiveTab] = useState("home");   // Bottom nav active tab
 const [theme, setTheme] = useState("dark");           // "dark" | "light"
 const [user, setUser] = useState(null);               // Logged-in user object
@@ -108,6 +111,7 @@ const [user, setUser] = useState(null);               // Logged-in user object
 ### Screen Values
 | Value | Meaning |
 |-------|---------|
+| `"landing"` | Desktop marketing page (skipped on mobile) |
 | `"splash"` | Loading/splash screen |
 | `"auth"` | Login or Signup form |
 | `"pin"` | 6-digit PIN verification |
@@ -116,6 +120,57 @@ const [user, setUser] = useState(null);               // Logged-in user object
 | `"usdt"` | USDT crypto wallet |
 | `"profile"` | User profile & settings |
 | `"support"` | Help & contact options |
+
+### Mobile Detection — Skip Landing
+
+```jsx
+useEffect(() => {
+  const isMobile = window.innerWidth < 768;
+  if (isMobile) {
+    const session = refreshSession();
+    if (session) { setUser(session); setScreen("pin"); }
+    else { setScreen("splash"); }
+  }
+}, []);
+```
+
+- On mount: checks screen width
+- **Mobile (< 768px)**: Skips landing page entirely — goes straight to Splash → Auth/PIN
+- **Desktop (≥ 768px)**: Shows the full marketing landing page first
+
+### Screen Transitions with Framer Motion
+
+```jsx
+<AnimatePresence mode="wait">
+  <motion.div
+    key={screen}
+    initial={{ opacity: 0, x: 30, scale: 0.98 }}
+    animate={{ opacity: 1, x: 0, scale: 1 }}
+    exit={{ opacity: 0, x: -30, scale: 0.98 }}
+    transition={{ duration: 0.35, ease: [0.32, 0.72, 0, 1] }}
+  >
+    {renderScreen()}
+  </motion.div>
+</AnimatePresence>
+```
+
+- `AnimatePresence` handles enter/exit animations when the screen changes
+- `mode="wait"` — waits for exit animation to finish before entering
+- Screens slide in from right, slide out to left, with a subtle scale effect
+- `key={screen}` — React uses this to detect screen changes and trigger animations
+
+### Global Ambient Glow
+
+```jsx
+<div className="fixed inset-0 pointer-events-none z-0">
+  <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-blue-900/20 rounded-full blur-[150px]" />
+  <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-gold/10 rounded-full blur-[150px]" />
+</div>
+```
+
+- Fixed position, behind all content (`z-0`)
+- Giant blurred orbs create ambient lighting on every screen
+- Blue on top-left, gold on bottom-right
 
 ### Theme Effect
 
@@ -130,55 +185,6 @@ useEffect(() => {
 - Toggles a `.light-mode` class on the `<html>` element
 - CSS rules prefixed with `html.light-mode` override dark colors
 - Persists choice to `localStorage`
-
-### Auth Check on Splash Finish
-
-```jsx
-const handleSplashFinish = () => {
-  const session = refreshSession();
-  if (session) { setUser(session); setScreen("pin"); }
-  else { setScreen("auth"); }
-};
-```
-
-- After the splash animation ends, checks if a user session exists in `localStorage`
-- **Has session** → go to PIN screen
-- **No session** → go to Login/Signup
-
-### Navigation Handlers
-
-```jsx
-const handleNavigate = (target) => {
-  if (["home", "transactions", "usdt", "support"].includes(target)) {
-    setActiveTab(target);   // Highlight correct bottom nav tab
-  }
-  setScreen(target);         // Render the target screen
-};
-```
-
-- `handleNavigate("profile")` — called from Home's hamburger menu
-- `handleTabChange("transactions")` — called from BottomNav
-
-### Logout Flow
-
-```jsx
-const handleLogout = () => {
-  clearSession();      // Removes aermeans_session from localStorage
-  setUser(null);
-  setScreen("auth");   // Back to login
-};
-```
-
-### Layout Container
-
-```jsx
-<div className="min-h-screen w-full bg-navy-900">
-  <div className="w-full max-w-6xl mx-auto min-h-screen relative">
-```
-
-- Outer: full viewport, dark navy background
-- Inner: content capped at `max-w-6xl` (1152px), centered with `mx-auto`
-- This makes the app look good on both mobile (full width) and desktop (centered content)
 
 ---
 
@@ -233,7 +239,6 @@ function generateAccountNumber() {
 export function signup({ fullName, username, email, phone, password, pin }) {
   const users = getUsers();
 
-  // Validation
   if (users.some((u) => u.username === username))
     return { success: false, error: "Username already taken" };
   if (users.some((u) => u.email === email))
@@ -290,287 +295,190 @@ export function refreshSession() {
 ```
 
 - Re-fetches the latest user data from the users array
-- This keeps the session in sync if user data changes (e.g., balance updates)
+- Keeps the session in sync if user data changes
 
 ---
 
 ## 6. Screen Components
 
-### `SplashScreen.jsx`
+### `LandingScreen.jsx` — Desktop-Only Marketing Page
 
-**Purpose:** Branded loading screen that auto-navigates after 2.5 seconds.
+**Purpose:** Premium marketing landing page that only appears on desktop (≥ 768px). Mobile users skip this entirely.
 
+#### Key Features
+| Feature | Implementation |
+|---------|---------------|
+| **Animated background** | Giant blurred glow orbs (blue, gold, purple) with `animate-pulse` |
+| **Floating particles** | 20 gold particles with `animate-float` CSS animation |
+| **Grid overlay** | Subtle 60px grid lines at 3% opacity for tech aesthetic |
+| **Animated counters** | `AnimatedCounter` component counts up from 0 using `useInView` |
+| **Glassmorphism cards** | `glass-card` class: `backdrop-filter: blur(12px)` + translucent border |
+| **Scroll animations** | Every section uses `motion.div` with `whileInView` fade-up |
+| **Gradient text** | `bg-gradient-to-r from-gold via-yellow-300 to-gold bg-clip-text text-transparent` |
+| **Glowing CTAs** | Gold buttons with `shadow-xl shadow-gold/20` and `animate-glow-pulse` |
+| **Staggered features** | 6 feature cards animate in with increasing delay |
+| **Testimonials** | Quote cards with giant decorative quotation marks |
+| **Trust badges** | Security & compliance icons in a row |
+
+#### `AnimatedCounter` Component
 ```jsx
-useEffect(() => {
-  const timer = setTimeout(() => onFinish(), 2500);
-  return () => clearTimeout(timer);
-}, [onFinish]);
+function AnimatedCounter({ target, suffix = "" }) {
+  const [count, setCount] = useState(0);
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true });
+
+  useEffect(() => {
+    if (!isInView) return;
+    let start = 0;
+    const timer = setInterval(() => {
+      start += target / 125;
+      if (start >= target) { setCount(target); clearInterval(timer); }
+      else setCount(Math.floor(start));
+    }, 16);
+    return () => clearInterval(timer);
+  }, [isInView, target]);
+
+  return <span ref={ref}>{count.toLocaleString()}{suffix}</span>;
+}
 ```
 
-- `useEffect` with cleanup: cancels the timer if the component unmounts early
-- SVG wave decorations at top and bottom for visual polish
-- Responsive: `text-4xl md:text-6xl` scales the headline on desktop
+- Uses `framer-motion`'s `useInView` to start counting only when visible
+- Runs for ~2 seconds at 60fps (16ms intervals)
+
+---
+
+### `SplashScreen.jsx`
+
+**Purpose:** Branded loading screen with premium animations.
+
+```jsx
+<motion.div
+  initial={{ opacity: 0, y: 30 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.8, delay: 0.2 }}
+>
+```
+
+- **Background orbs:** Blue, gold, cyan pulsing at different delays
+- **Floating particles:** 15 white particles with randomized positions and durations
+- **Staggered content:** Headline → Logo → Avatar animate in sequence
+- **Loading bar:** Gold gradient bar at bottom animates width from 0% to 100% over 2.5s
+- **Bouncing avatar:** `animate-bounce-soft` on the emoji
+
+---
 
 ### `AuthScreen.jsx`
 
-**Purpose:** Dual-mode authentication (Login / Signup) with form validation.
+**Purpose:** Dual-mode authentication with glassmorphism design.
 
-#### State
-```jsx
-const [mode, setMode] = useState("login");          // Toggle between forms
-const [showPassword, setShowPassword] = useState(false);
-const [error, setError] = useState("");
-const [loading, setLoading] = useState(false);
-```
+#### Visual Flair
+| Element | Effect |
+|---------|--------|
+| Background | Blue + gold glow orbs + floating particles |
+| Form container | `glass-card`: frosted glass with `backdrop-blur` |
+| Tab buttons | Active tab gets gold background + `shadow-gold/20` |
+| Input fields | `bg-white/5 border-white/10`, glow gold on focus |
+| CTA button | `animate-glow-pulse`: pulsating gold shadow |
+| Form inputs | Staggered entrance: each field slides in from left |
+| Error message | `motion.div` fades in with `y: -10` |
 
-#### Signup Validation
-```js
-if (password !== confirmPass) {
-  setError("Passwords do not match");
-  return;
-}
-if (pin.length !== 6) {
-  setError("PIN must be exactly 6 digits");
-  return;
-}
-```
-
-- Password match check
-- PIN must be exactly 6 digits
-- `setTimeout(..., 600)` simulates network latency for realism
-
-#### Form Input Pattern
-```jsx
-<div className="relative">
-  <FaUser className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
-  <input type="text" placeholder="Full Name" ... className={inputClass} required />
-</div>
-```
-
-- Icon absolutely positioned inside the input
-- `pl-11` (padding-left) creates space for the icon
-- All inputs use the same `inputClass` for consistency
+---
 
 ### `PinLoginScreen.jsx`
 
-**Purpose:** 6-digit PIN keypad with visual feedback and error animation.
+**Purpose:** 6-digit PIN keypad with animated visual feedback.
 
-#### PIN Logic
-```jsx
-const handleNumber = (num) => {
-  if (pin.length < maxPinLength) {
-    const newPin = pin + num;
-    setPin(newPin);
-    setError(false);
-    if (newPin.length === maxPinLength) {
-      setTimeout(() => {
-        if (newPin === correctPin) onLogin();
-        else { setError(true); setPin(""); }
-      }, 200);
-    }
-  }
-};
-```
+#### Visual Flair
+| Element | Effect |
+|---------|--------|
+| Background | Gold + blue ambient glow orbs |
+| Avatar | Glowing gold blur behind the user icon |
+| PIN dots | `motion.div` with `animate={{ scale: 1.2 }}` when filled |
+| Error shake | `animate-shake` class triggers left-right wobble |
+| Keypad buttons | `bg-white/5 border-white/10`, glass effect |
+| Button tap | `whileTap={{ scale: 0.9 }}` on every key |
+| Staggered keys | Numbers animate in with `delay: i * 0.03` |
+| Backspace | Red button with `hover:shadow-red-500/30` |
 
-- Appends digits until 6 are entered
-- On the 6th digit, validates against the user's stored PIN (`user.pin`)
-- **Success** → calls `onLogin()` → Home screen
-- **Failure** → triggers error state, clears PIN, shake animation plays
-
-#### PIN Dots
-```jsx
-<div className={`flex items-center justify-center gap-4 ... ${error ? "animate-shake" : ""}`}>
-  {Array.from({ length: 6 }).map((_, i) => (
-    <div key={i} className={`w-4 h-4 rounded-full ... ${error ? "bg-red-500" : i < pin.length ? "bg-gold" : "bg-navy-500"}`} />
-  ))}
-</div>
-```
-
-- 6 circles that fill with gold as digits are entered
-- Error state turns all dots red and triggers the `animate-shake` CSS animation
-
-#### Number Pad Grid
-```jsx
-<div className="grid grid-cols-3 gap-y-6 md:gap-y-8 gap-x-4 max-w-sm md:max-w-md mx-auto w-full">
-```
-
-- CSS Grid: 3 columns
-- Mobile: `w-16 h-16` buttons
-- Desktop: `w-20 h-20` buttons (via `md:w-20 md:h-20`)
-- Fingerprint icon (decorative) and red backspace button
+---
 
 ### `HomeScreen.jsx`
 
-**Purpose:** Main dashboard with wallet balance, account details, quick actions, and service grid.
+**Purpose:** Main dashboard with glassmorphism cards and glow effects.
 
-#### Props
-```jsx
-export default function HomeScreen({ user, onNavigate }) {
-```
+#### Visual Flair
+| Element | Effect |
+|---------|--------|
+| Background glows | Blue + gold ambient orbs |
+| Header buttons | `bg-white/5 border-white/10`, gold on hover |
+| Notification dot | `animate-pulse` on the red badge |
+| **Balance card** | Blue gradient with pink/purple decorative orbs |
+| **Account card** | Gold gradient background `rgba(201,162,39,0.15)` with gold border |
+| Quick actions | `glass-card` container, gold border glow on hover |
+| Service icons | `group-hover:scale-110` with `shadow-lg` |
+| SMS banner | `glass-card` with social icons that `hover:scale-1.2` |
 
-- `user`: The logged-in user object (from `App.jsx` state)
-- `onNavigate`: Callback to change screens (e.g., to Profile)
-
-#### Balance Card
-```jsx
-<div className="rounded-2xl overflow-hidden relative bg-gradient-to-r from-blue-600 to-blue-800 p-5 md:p-6">
-  <div className="absolute top-0 right-0 w-40 h-40 bg-pink-500/30 rounded-full -translate-y-1/2 translate-x-1/4"></div>
-```
-
-- Gradient background (`from-blue-600 to-blue-800`)
-- Decorative pink/purple circles positioned absolutely for depth
-- Eye icon toggles between `₦0.61` and `₦****`
-
-#### Account Details Card
-```jsx
-<div className="rounded-xl bg-gold-dark/60 p-4 md:p-5">
-  <div className="flex justify-between items-start">
-    <div className="space-y-1 md:space-y-2">
-      <p className="font-family-script text-gold-light text-sm">Account number</p>
-      ...
-    </div>
-    <div className="text-right space-y-1 md:space-y-2">
-      <p className="text-white text-sm font-medium">{accountNumber}</p>
-      ...
-    </div>
-  </div>
-</div>
-```
-
-- Gold-tinted card showing account number, name, and bank
-- Two-column flex layout: labels left, values right
-
-#### Services Grid
-```jsx
-<div className="grid grid-cols-4 md:grid-cols-4 gap-4 md:gap-6">
-  {services.map((service) => (
-    <button key={service.label} className="flex flex-col items-center gap-2 md:gap-3 group">
-      <div className={`w-12 h-12 md:w-14 md:h-14 rounded-full ${service.color} ... group-hover:scale-110 transition-transform`}>
-        <service.icon className="text-white" size={20} md:size={24} />
-      </div>
-      <span className="font-family-script text-white text-[10px] md:text-xs">{service.label}</span>
-    </button>
-  ))}
-</div>
-```
-
-- 4-column grid of service icons (Data, Airtime, Betting, etc.)
-- Each has a unique color class (`bg-purple-500`, `bg-blue-500`, etc.)
-- `group-hover:scale-110` adds a subtle zoom on hover
-
-#### Responsive Layout
-```jsx
-<div className="px-4 md:px-8 md:grid md:grid-cols-2 md:gap-6">
-```
-
-- On mobile (`default`): single column, stacked cards
-- On desktop (`md:`): 2-column grid — balance/account/actions on left, banner/services on right
+---
 
 ### `TransactionsScreen.jsx`
 
-**Purpose:** Scrollable list of all financial transactions with color-coded amounts.
+**Purpose:** Scrollable transaction list with animated cards.
 
-```jsx
-const transactions = [
-  { id: 1, type: "debit", title: "MTN Data 500MB GIFTING...", date: "May 7, 2025 @8:42", amount: "-₦350.00", balance: "₦0.61" },
-  ...
-];
-```
+#### Visual Flair
+| Element | Effect |
+|---------|--------|
+| Background | Blue ambient glow orb |
+| Transaction cards | `glass-card` with translucent border |
+| Hover effect | `whileHover={{ scale: 1.02, x: 4 }}` — card lifts and shifts right |
+| Icon containers | Colored borders: blue for debit, green for credit |
+| Staggered list | Each row animates in with `delay: i * 0.05` |
 
-- Hardcoded demo data (in a real app, this would come from an API)
-- **Debit** (outgoing): red text `text-red-400`, blue up-arrow icon
-- **Credit** (incoming): green text `text-green-400`, green down-arrow icon
-
-```jsx
-<div className="px-4 md:px-8 md:grid md:grid-cols-2 md:gap-4">
-```
-
-- Mobile: single column list
-- Desktop: 2-column card grid for better space usage
+---
 
 ### `UsdtWalletScreen.jsx`
 
-**Purpose:** Cryptocurrency wallet for USDT (TRC-20 network).
+**Purpose:** Cryptocurrency wallet with glowing elements.
 
-```jsx
-<p className="text-4xl md:text-5xl font-bold text-white mb-4 md:mb-6">$0.00</p>
-```
+#### Visual Flair
+| Element | Effect |
+|---------|--------|
+| Background | Gold + blue ambient glow orbs |
+| Balance card | Dark gradient with gold border and inner glow orb |
+| **Withdraw button** | `animate-glow-pulse` — pulsating gold shadow |
+| Generate Address CTA | Gold gradient with `animate-glow-pulse` |
+| Empty state | 💸 emoji bounces with `animate={{ y: [0, -10, 0] }}` infinite loop |
 
-- Shows USDT balance in USD
-- Network label: "TRC-20" (Tron blockchain)
-- Yellow "Withdraw" button with wallet icon
-- "Tap to Generate Deposit Address" CTA button
+---
 
 ### `ProfileScreen.jsx`
 
-**Purpose:** User profile with tier badge, settings menu, sign out, and theme toggle.
+**Purpose:** User profile with animated menu and glowing elements.
 
-#### Header Card
-```jsx
-<div className="rounded-2xl bg-blue-700 p-4 md:p-6 flex items-center justify-between">
-  <div className="flex items-center gap-3 md:gap-4">
-    <div className="w-14 h-14 md:w-16 md:h-16 bg-gold rounded-full ...">
-      <FaUser className="text-navy-900" size={24} />
-    </div>
-    <div>
-      <h3 className="font-family-script text-white text-lg md:text-xl">{displayName}</h3>
-      <p className="font-family-script text-gray-300 text-sm md:text-base">Username : {username}</p>
-      <p className="font-family-script text-gray-300 text-sm md:text-base">Joined {joinedDate}</p>
-    </div>
-  </div>
-  <span className="px-4 py-1.5 bg-navy-900 rounded-lg font-family-script text-white text-sm">{tier}</span>
-</div>
-```
+#### Visual Flair
+| Element | Effect |
+|---------|--------|
+| Background | Blue ambient glow orb |
+| Header card | Blue gradient with gold glow orb, `bg-gradient-to-br from-white/5` overlay |
+| Avatar | `shadow-xl shadow-gold/30` + gold blur behind |
+| Tier badge | Gold border with `bg-gold/10` |
+| Menu items | Staggered entrance with `delay: i * 0.04` |
+| Menu hover | `whileHover={{ x: 4 }}` — slides right |
+| Menu icons | `group-hover:bg-gold/25 group-hover:border-gold/50` |
 
-- Blue card with gold avatar circle
-- "REGULAR" tier badge (top-right)
-- All text uses `font-family-script` (Dancing Script) to match the original app's cursive style
-
-#### Menu Items
-```jsx
-const menuItems = [
-  { icon: FaUser, label: "Profile" },
-  { icon: FaCrown, label: "Account Tiers" },
-  { icon: FaIdCard, label: "Add BVN / NIN" },
-  ...
-];
-```
-
-- 10 menu items mapped from an array
-- Each has a gold-dark circular icon background
-- Chevron arrow on the right
-- Desktop: 2-column grid layout
-
-#### Bottom Actions
-```jsx
-<button onClick={onLogout} className="flex items-center gap-2 text-red-400 font-family-script ...">
-  <FaSignOutAlt size={16} /> Sign out
-</button>
-<button onClick={onToggleTheme} className="flex items-center gap-2 text-gray-400 font-family-script ...">
-  {isLight ? <FaMoon size={16} /> : <FaSun size={16} />}
-  {isLight ? "Dark" : "Light"}
-</button>
-```
-
-- **Sign out**: calls `onLogout` → clears session → back to Auth
-- **Theme toggle**: switches between sun (dark) and moon (light) icons
+---
 
 ### `SupportScreen.jsx`
 
-**Purpose:** Customer support contact options.
+**Purpose:** Customer support with glassmorphism cards.
 
-```jsx
-const supportOptions = [
-  { icon: FaClipboardList, title: "Check FAQs", subtitle: "Read our extensive help articles" },
-  { icon: FaEnvelope, title: "Contact customer support through email", subtitle: "Seek help from our support team" },
-  { icon: FaTelegram, title: "Join our Telegram Channel", subtitle: "you can easily join our Telegram Channel" },
-  { icon: FaWhatsapp, title: "Message us on Whatsapp", subtitle: "Text us on Whatsapp and get immediate response" },
-];
-```
-
-- 4 support channels mapped from data
-- Each item has an icon, title (cursive), subtitle (gray), and chevron arrow
-- Desktop: 2-column grid
+#### Visual Flair
+| Element | Effect |
+|---------|--------|
+| Background | Blue ambient glow orb |
+| Option cards | `glass-card` with rounded-2xl |
+| Hover | `whileHover={{ scale: 1.02, x: 4 }}` |
+| Icons | Gold border, hover fills with gold |
+| Staggered entrance | Each card with `delay: 0.1 + i * 0.08` |
 
 ---
 
@@ -578,47 +486,27 @@ const supportOptions = [
 
 ### `BottomNav.jsx`
 
-**Purpose:** Fixed bottom navigation bar with 4 tabs.
+**Purpose:** Fixed bottom navigation bar with premium active state.
 
 ```jsx
-const tabs = [
-  { id: "home", label: "Home", icon: FaHome },
-  { id: "transactions", label: "Transactions", icon: FaExchangeAlt },
-  { id: "usdt", label: "USDT", icon: FaMoneyBillWave },
-  { id: "support", label: "Support", icon: FaHeadset },
-];
+<nav className="fixed bottom-0 left-0 w-full bg-navy-800/90 backdrop-blur-lg border-t border-white/10 z-50">
 ```
 
-#### Active State Design
-```jsx
-<div className={`flex items-center justify-center rounded-full transition-all duration-200 ${
-  isActive ? "w-12 h-12 md:w-14 md:h-14 bg-navy-600 border-2 border-navy-900 shadow-lg" : "w-8 h-8 md:w-10 md:h-10"
-}`}>
-```
-
-- Active tab: larger circle (`w-12 h-12`) with background + shadow, shifted up (`-mt-3`)
-- Inactive tab: smaller, no background
-- Desktop: tabs get more horizontal padding (`md:px-8`)
-
-#### Fixed Positioning
-```jsx
-<nav className="fixed bottom-0 left-0 w-full bg-navy-800 border-t border-navy-600 z-50">
-```
-
-- `fixed` — stays at bottom while scrolling
-- `z-50` — stays above all content
-- `border-t` — subtle top border for separation
+| Feature | Implementation |
+|---------|---------------|
+| **Backdrop blur** | `backdrop-blur-lg` creates frosted glass effect |
+| Active tab | Larger circle (`w-12 h-12`) with gold border + `shadow-gold/20` |
+| Active motion | `animate={{ y: -2 }}` — subtle lift on active icon |
+| Tap feedback | `whileTap={{ scale: 0.9 }}` on all tabs |
 
 ---
 
-## 8. Styling & Theme
+## 8. Styling, Theme & Animations
 
 ### `index.css`
 
 #### Tailwind v4 Theme Declaration
 ```css
-@import "tailwindcss";
-
 @theme {
   --color-navy-900: #0a1628;
   --color-navy-800: #0f1f3d;
@@ -635,9 +523,29 @@ const tabs = [
 }
 ```
 
-- Tailwind v4 uses `@theme` instead of `tailwind.config.js`
-- Custom colors: navy scale (900→500) + gold scale
-- Custom fonts: Inter for body, Dancing Script for cursive headings
+#### Custom Animations
+
+| Animation | CSS | Used On |
+|-----------|-----|---------|
+| **Shake** | `@keyframes shake` | PIN error feedback |
+| **Float** | `@keyframes float` | Landing page particles |
+| **Float Slow** | `@keyframes float-slow` | Gentle bobbing elements |
+| **Glow Pulse** | `@keyframes glow-pulse` | CTA buttons (pulsating gold shadow) |
+| **Shimmer** | `@keyframes shimmer` | Loading skeleton effect |
+| **Spin Slow** | `@keyframes spin-slow` | 20s rotation |
+| **Bounce Soft** | `@keyframes bounce-soft` | Avatar emoji bounce |
+| **Ripple** | `@keyframes ripple` | Expanding circle effect |
+
+#### Utility Classes
+
+| Class | Effect |
+|-------|--------|
+| `.glass-card` | `backdrop-filter: blur(12px)` + translucent border + subtle background |
+| `.text-gradient-gold` | Gold-to-yellow gradient text |
+| `.gradient-border` | Gold-to-blue animated gradient border |
+| `.animate-glow-pulse` | Pulsating gold box-shadow |
+| `.animate-float` | Upward floating particles |
+| `.animate-shake` | Error shake |
 
 #### Light Mode Overrides
 ```css
@@ -646,73 +554,20 @@ html.light-mode .bg-navy-700 { background-color: #ffffff; }
 html.light-mode .text-white { color: #1a202c; }
 ```
 
-- When `html` has `.light-mode` class, these override the dark theme
-- Navy backgrounds become light grays/whites
-- White text becomes dark text
-- Cards and borders adjust accordingly
-
-#### Custom Animations
-```css
-@keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  10%, 30%, 50%, 70%, 90% { transform: translateX(-6px); }
-  20%, 40%, 60%, 80% { transform: translateX(6px); }
-}
-.animate-shake {
-  animation: shake 0.4s ease-in-out;
-}
-```
-
-- Applied to PIN dots when the wrong PIN is entered
-- Quick left-right shake for 400ms
-
-#### Scrollbar Hide Utility
-```css
-.scrollbar-hide {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-.scrollbar-hide::-webkit-scrollbar {
-  display: none;
-}
-```
-
-- Hides scrollbars across all browsers
-- Used on scrollable containers for a cleaner mobile app look
-
 ---
 
 ## 9. Authentication Flow
 
 ```
-┌─────────────┐     2.5s      ┌─────────────────┐
-│   Splash    │ ────────────► │  Check Session  │
-│   Screen    │               │   (localStorage)│
-└─────────────┘               └────────┬────────┘
-                                       │
-                    ┌──────────────────┼──────────────────┐
-                    │ No session       │ Has session      │
-                    ▼                  ▼                  │
-            ┌──────────────┐    ┌──────────────┐         │
-            │  AuthScreen  │    │ PinLoginScreen│         │
-            │ (Login/Signup)│    │ (Verify PIN)  │         │
-            └──────┬───────┘    └──────┬───────┘         │
-                   │                    │                 │
-         Login OK / Signup OK    PIN Correct             │
-                   │                    │                 │
-                   └───────────────────┼─────────────────┘
-                                       ▼
-                              ┌──────────────┐
-                              │   HomeScreen │
-                              │  (Dashboard) │
-                              └──────────────┘
+Desktop:  Landing → Get Started → Splash → Auth → PIN → Home
+Mobile:   Splash → Auth/PIN → Home (skips landing)
 ```
 
 ### Signup Flow
 1. User fills signup form (name, username, email, phone, password, PIN)
 2. `signup()` validates uniqueness, generates account number
 3. User saved to `localStorage`, session set
-4. Auto-navigates to PIN screen (to verify they remember their PIN)
+4. Auto-navigates to PIN screen
 5. PIN correct → Home
 
 ### Login Flow
@@ -743,37 +598,63 @@ The app uses **Tailwind's mobile-first responsive prefixes**:
 ```jsx
 // Text sizing
 <h1 className="text-2xl md:text-3xl">Title</h1>
-// Mobile: 24px | Desktop: 30px
 
 // Padding
 <div className="px-4 md:px-8">...</div>
-// Mobile: 16px sides | Desktop: 32px sides
 
 // Grid layouts
 <div className="md:grid md:grid-cols-2 md:gap-6">
-// Mobile: single column (stacked)
-// Desktop: 2 columns with 24px gap
 
 // Button sizing
 <button className="w-16 h-16 md:w-20 md:h-20">1</button>
-// Mobile: 64px | Desktop: 80px
 ```
 
 ### Screen-Specific Responsive Behavior
 
 | Screen | Mobile | Desktop (md+) |
 |--------|--------|---------------|
-| **Auth** | Full-width form | Centered `max-w-lg` form |
+| **Landing** | Not shown (skipped) | Full marketing page with all animations |
+| **Auth** | Full-width form | Centered form with larger inputs |
 | **PIN** | Compact keypad | Larger buttons, centered |
-| **Home** | Stacked cards | 2-column grid layout |
+| **Home** | Stacked cards | 2-column grid |
 | **Transactions** | Single column | 2-column card grid |
-| **Profile** | Single column menu | 2-column menu grid |
+| **USDT** | Stacked | 2-column layout |
+| **Profile** | Single column | 2-column menu grid |
 | **Support** | Single column | 2-column options grid |
-| **BottomNav** | Compact tabs | Wider tabs, bigger active bubble |
 
 ---
 
-## 11. LocalStorage Schema
+## 11. Desktop-Only Landing Page
+
+The landing page is **intentionally desktop-only**:
+
+```jsx
+// App.jsx
+useEffect(() => {
+  const isMobile = window.innerWidth < 768;
+  if (isMobile) {
+    setScreen("splash");  // Skip landing on mobile
+  }
+}, []);
+```
+
+**Rationale:**
+- Landing pages are marketing tools best experienced on larger screens
+- Mobile users want to get straight into the app (Splash → Auth → PIN → Home)
+- The landing page is content-heavy (stats, features, testimonials, CTAs) which works better on desktop
+
+The landing page includes:
+- Animated background with floating particles and glow orbs
+- Stats bar with animated counters (50K+ users, ₦2B+ transacted, 99% uptime)
+- 6 feature cards with glassmorphism and hover effects
+- 3-step "How It Works" with gold diamond badges
+- 3 testimonial quote cards
+- Trust badges (Encryption, Fraud, CBN, NDPR, ISO)
+- Final CTA with glowing button
+
+---
+
+## 12. LocalStorage Schema
 
 ### `aermeans_users`
 ```json
@@ -812,7 +693,7 @@ The app uses **Tailwind's mobile-first responsive prefixes**:
 
 ---
 
-## 12. How to Run & Extend
+## 13. How to Run & Extend
 
 ### Run Locally
 ```bash
@@ -831,24 +712,39 @@ Output goes to `dist/` folder. Deploy `dist/` to Vercel, Netlify, or GitHub Page
 ### Adding a New Screen
 
 1. Create `src/screens/NewScreen.jsx`
-2. Add a new state value in `App.jsx`: `const [screen, setScreen] = useState(...)`
-3. Add conditional rendering:
-   ```jsx
-   {screen === "newscreen" && <NewScreen />}
-   ```
+2. Add import in `App.jsx`
+3. Add case in `renderScreen()` switch statement
 4. Add navigation:
    ```jsx
    <button onClick={() => setScreen("newscreen")}>Go</button>
    ```
+5. Add Framer Motion entrance animation:
+   ```jsx
+   <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+   ```
 
-### Adding a New Service to Home
+### Adding Flair to a New Component
 
-```js
-// In HomeScreen.jsx
-const services = [
-  ...existing services,
-  { icon: FaNewIcon, label: "New Service", color: "bg-teal-500" },
-];
+Use these patterns consistently:
+
+```jsx
+// Glassmorphism card
+<div className="glass-card rounded-2xl p-6">
+
+// Background glow
+<div className="absolute top-[-10%] right-[-10%] w-[300px] h-[300px] bg-gold/10 rounded-full blur-[100px]" />
+
+// Staggered entrance
+<motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
+
+// Hover effect
+<motion.button whileHover={{ scale: 1.02, x: 4 }} whileTap={{ scale: 0.98 }}>
+
+// Glowing button
+<button className="animate-glow-pulse bg-gold ...">
+
+// Gradient text
+<span className="bg-gradient-to-r from-gold via-yellow-300 to-gold bg-clip-text text-transparent">
 ```
 
 ### Connecting to a Real Backend
@@ -856,7 +752,6 @@ const services = [
 Replace `src/data/users.js` with API calls:
 
 ```js
-// Instead of localStorage:
 export async function signup(data) {
   const res = await fetch("/api/auth/signup", {
     method: "POST",
@@ -887,10 +782,11 @@ export async function signup(data) {
 | Entry/Config | 4 | `index.html`, `main.jsx`, `index.css`, `postcss.config.js` |
 | Router/State | 1 | `App.jsx` |
 | Data Layer | 1 | `users.js` |
-| Screen Components | 7 | Splash, Auth, PIN, Home, Transactions, USDT, Profile, Support |
+| Screen Components | 8 | Landing, Splash, Auth, PIN, Home, Transactions, USDT, Profile, Support |
 | Shared Components | 1 | `BottomNav.jsx` |
-| **Total Source** | **14** | |
+| Documentation | 1 | `DOCUMENTATION.md` |
+| **Total Source** | **16** | |
 
 ---
 
-*Documentation generated for Aermeans Bank App v1.0*
+*Documentation generated for Aermeans Bank App v1.5*
